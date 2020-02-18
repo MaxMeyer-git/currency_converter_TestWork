@@ -10,17 +10,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class HuinaTest {
+public class CurrencyServiceTest {
 
     @Autowired
-    private Huina huina;
+    private CurrencyService currencyService;
 
     @Test
     public void calc() {
         ConversionRequest conversionRequest = new ConversionRequest
                 (VALCODEENUM.USD, VALCODEENUM.RUR, 100. ,
                         "21.02.2019");
-        var x = huina.calc(conversionRequest);
+        var x = currencyService.calc(conversionRequest);
         System.out.println(x.toString());
 
     }

@@ -33,11 +33,11 @@ public class Currency {
     @Column (name = "date")
     private  LocalDate date;
 
-//    public Currency(ValuteDTO valuteDTO, LocalDate date) {
-//        this.numcode = valuteDTO.getNumcode();
-//        this.value = valuteDTO.getValue();
-//        this.date = date;
-//    }
+    public Currency(ValuteDTO valuteDTO, LocalDate date) {
+        this.numcode = valuteDTO.getNumcode();
+        this.value = valuteDTO.getValue();
+        this.date = date;
+    }
 
     public Currency(int numcode, Double value, LocalDate date) {
         this.numcode = numcode;

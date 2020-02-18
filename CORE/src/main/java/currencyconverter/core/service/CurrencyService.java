@@ -24,19 +24,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class Huina {
+public class CurrencyService {
 
     @Value("${priority.default.request.url.withdate}")
     String urlstring;
 
-    @Autowired
-    private CurrencyRepository currencyRepository;
+    private final CurrencyRepository currencyRepository;
+
+    public CurrencyService(CurrencyRepository currencyRepository) {
+        this.currencyRepository = currencyRepository;
+    }
 
 
-    public ResultDTO calc (ConversionRequest reqest) {
-        Cur currency = getCurrValue(reqest);
+    public ResultDTO calc (ConversionRequest request) {
+        Cur currency = getCurrValue(request);
 
-        Double res = (currency.getValFrom() / currency.getNominalFrom() * reqest.getAmount())
+        Double res = (currency.getValFrom() / currency.getNominalFrom() * request.getAmount())
                 / (currency.getValTo() / currency.getNominalTo());
 
         return new ResultDTO(res, currency.getDate());
@@ -58,41 +61,41 @@ public class Huina {
 
     }
 
-    private Cur getCurrValue(ConversionRequest reqest){
+    private Cur getCurrValue(ConversionRequest request){
 
-        LocalDate date = parseDate(reqest.getDate());
+        LocalDate date = parseDate(request.getDate());
         Cur cur = new Cur();
 
-        if (reqest.getCurrencyFrom() == VALCODEENUM.RUR){
+        if (request.getCurrencyFrom() == VALCODEENUM.RUR){
 
             cur.setValFrom(1.);
             cur.setNominalFrom(1);
 
-            var carrancy = check (date, reqest.getCurrencyTo().getNumcode());
-            cur.setValTo(carrancy.getValue());
-            cur.setNominalTo(reqest.getCurrencyTo().getNominal());
-            cur.setDate(carrancy.getDate());
+            var currency = check (date, request.getCurrencyTo().getNumcode());
+            cur.setValTo(currency.getValue());
+            cur.setNominalTo(request.getCurrencyTo().getNominal());
+            cur.setDate(currency.getDate());
         }
 
-        if (reqest.getCurrencyTo() == VALCODEENUM.RUR){
-            var carrancy = check (date, reqest.getCurrencyTo().getNumcode());
-            cur.setValFrom(carrancy.getValue());
-            cur.setNominalFrom(reqest.getCurrencyTo().getNominal());
-            cur.setDate(carrancy.getDate());
+        if (request.getCurrencyTo() == VALCODEENUM.RUR){
+            var currency = check (date, request.getCurrencyTo().getNumcode());
+            cur.setValFrom(currency.getValue());
+            cur.setNominalFrom(request.getCurrencyTo().getNominal());
+            cur.setDate(currency.getDate());
 
             cur.setValTo(1.);
             cur.setNominalTo(1);
         }
 
-        if (reqest.getCurrencyFrom() != VALCODEENUM.RUR && reqest.getCurrencyTo() != VALCODEENUM.RUR){
-            var carrancy = check (date, reqest.getCurrencyFrom().getNumcode());
-            cur.setValFrom(carrancy.getValue());
-            cur.setNominalFrom(reqest.getCurrencyFrom().getNominal());
-            cur.setDate(carrancy.getDate());
+        if (request.getCurrencyFrom() != VALCODEENUM.RUR && request.getCurrencyTo() != VALCODEENUM.RUR){
+            var currency = check (date, request.getCurrencyFrom().getNumcode());
+            cur.setValFrom(currency.getValue());
+            cur.setNominalFrom(request.getCurrencyFrom().getNominal());
+            cur.setDate(currency.getDate());
 
-            var currency2 = check (carrancy.getDate(), reqest.getCurrencyTo().getNumcode());
+            var currency2 = check (currency.getDate(), request.getCurrencyTo().getNumcode());
             cur.setValTo(currency2.getValue());
-            cur.setNominalTo(reqest.getCurrencyTo().getNominal());
+            cur.setNominalTo(request.getCurrencyTo().getNominal());
         }
         return cur;
     }
@@ -103,13 +106,13 @@ public class Huina {
             return optionalCurrency.get();
 
         } else {
-            LocalDate dateOfPulledCurses = vseSrazu(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            LocalDate dateOfPulledCurses = pullAndSave(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             Optional<Currency> x = currencyRepository.findByNumcodeAndDate(numcode, dateOfPulledCurses);
             return x.orElseThrow(NoSuchElementException::new);
         }
     }
 
-    public LocalDate vseSrazu(String date) {
+    public LocalDate pullAndSave(String date) {
         var x = pullData(date);
         return saveCurr(x);
     }
@@ -128,13 +131,13 @@ public class Huina {
     // TODO custom exception
     private LocalDate saveCurr(ValCurs valCurs) {
         LocalDate localDate = parseDate(valCurs.getDate());
-        if (chekIsDatePresent(localDate)) {
+        if (checkIsDatePresent(localDate)) {
             return localDate;
         }
 
         var currencyList = valCurs.getValuteDTOlist().stream()
-//                .map(valuteDTO -> new Currency(valuteDTO, localDate))
-                .map(valuteDTO -> new Currency(valuteDTO.getNumcode(), valuteDTO.getValue(), localDate))
+                .map(valuteDTO -> new Currency(valuteDTO, localDate))
+//                .map(valuteDTO -> new Currency(valuteDTO.getNumcode(), valuteDTO.getValue(), localDate))
                 .collect(Collectors.toList());
 
         currencyRepository.saveAll(currencyList);
@@ -145,7 +148,7 @@ public class Huina {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 
-    private boolean chekIsDatePresent(LocalDate date) {
+    private boolean checkIsDatePresent(LocalDate date) {
         Long count = currencyRepository.countByDate(date);
         return count > 0;
     }
