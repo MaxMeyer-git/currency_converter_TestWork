@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 public class Currency {
 
     @Id
@@ -38,10 +38,4 @@ public class Currency {
         this.value = valuteDTO.getValue();
         this.date = date;
     }
-
-    public Currency(int numcode, Double value, LocalDate date) {
-        this.numcode = numcode;
-        this.value = value;
-        this.date = date;
-    }
-}
+ }

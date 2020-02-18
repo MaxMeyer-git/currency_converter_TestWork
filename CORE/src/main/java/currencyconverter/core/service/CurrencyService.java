@@ -35,7 +35,6 @@ public class CurrencyService {
         this.currencyRepository = currencyRepository;
     }
 
-
     public ResultDTO calc (ConversionRequest request) {
         Cur currency = getCurrValue(request);
 
@@ -43,7 +42,6 @@ public class CurrencyService {
                 / (currency.getValTo() / currency.getNominalTo());
 
         return new ResultDTO(res, currency.getDate());
-
     }
 
     @Setter
@@ -57,8 +55,6 @@ public class CurrencyService {
         int nominalTo;
 
         LocalDate date;
-
-
     }
 
     private Cur getCurrValue(ConversionRequest request){
@@ -78,7 +74,7 @@ public class CurrencyService {
         }
 
         if (request.getCurrencyTo() == VALCODEENUM.RUR){
-            var currency = check (date, request.getCurrencyTo().getNumcode());
+            var currency = check (date, request.getCurrencyFrom().getNumcode());
             cur.setValFrom(currency.getValue());
             cur.setNominalFrom(request.getCurrencyTo().getNominal());
             cur.setDate(currency.getDate());
@@ -137,7 +133,6 @@ public class CurrencyService {
 
         var currencyList = valCurs.getValuteDTOlist().stream()
                 .map(valuteDTO -> new Currency(valuteDTO, localDate))
-//                .map(valuteDTO -> new Currency(valuteDTO.getNumcode(), valuteDTO.getValue(), localDate))
                 .collect(Collectors.toList());
 
         currencyRepository.saveAll(currencyList);

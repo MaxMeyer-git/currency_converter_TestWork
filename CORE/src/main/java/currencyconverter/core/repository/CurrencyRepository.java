@@ -13,18 +13,8 @@ import java.util.UUID;
 @Repository
 public interface CurrencyRepository extends JpaRepository<Currency, UUID> {
 
-
     Optional<Currency> findByNumcodeAndDate(Integer numcode , LocalDate date);
 
-
-//    @Query(value = "select c from currency c where numcode = 840")
-    Optional<Currency> findByNumcode(Integer numcode );
-
-
-    Optional<Currency> findByDate(LocalDate date );
-
     Long countByDate (LocalDate date);
-//    Optional<List<Currency>>
-
 
 }
