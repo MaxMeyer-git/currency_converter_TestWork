@@ -4,7 +4,6 @@ import currencyconverter.core.entity.сurrency.ConversionRequest;
 import currencyconverter.core.entity.сurrency.CurrencyENUM;
 import currencyconverter.core.entity.сurrency.LogUnitRequest;
 import currencyconverter.core.entity.сurrency.RequestLogUnit;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,10 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CurrencyServiceTest {
+public class ConversionServiceTest {
 
     @Autowired
-    private CurrencyService currencyService;
+    private ConversionService conversionService;
 
     @Autowired
     private RequestLogUnitService requestLogUnitService;
@@ -42,7 +41,7 @@ public class CurrencyServiceTest {
         ConversionRequest conversionRequest1 = new ConversionRequest
                 (CurrencyENUM.USD, CurrencyENUM.AMD, 100., "10.02.2019");
 
-        var x = currencyService.calculate(conversionRequest);
+        var x = conversionService.calculate(conversionRequest);
         System.out.println(x.toString());
     }
 

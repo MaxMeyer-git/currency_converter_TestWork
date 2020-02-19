@@ -37,4 +37,6 @@ public class Currency {
         this.value = valuteDTO.getValue();
         this.date = date;
     }
+
+
  }

@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 
 @Service
 public class RequestLogUnitService {
-
     private final RequestLogUnitRepository requestLogUnitRepository;
 
     public RequestLogUnitService(RequestLogUnitRepository requestLogUnitRepository) {
@@ -22,7 +21,6 @@ public class RequestLogUnitService {
 
     public void save(RequestLogUnit rlu) {
         requestLogUnitRepository.save(rlu);
-
     }
 
     public List<RequestLogUnit> getLog(LogUnitRequest request) {

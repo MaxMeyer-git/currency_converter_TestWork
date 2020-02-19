@@ -10,8 +10,13 @@ public class SimpleTest {
     public void test() {
 
 //        System.out.println(CurrencyENUM.RUR.getAllAvailable());
-    Boolean x = true;
-        System.out.println(x);
+
+        int i = 0;
+        Object[] possibleValues = CurrencyENUM.RUR.getDeclaringClass().getEnumConstants();
+        for (Object o : possibleValues) {
+            i++;
+        }
+        System.out.println(i);
     }
 
 }

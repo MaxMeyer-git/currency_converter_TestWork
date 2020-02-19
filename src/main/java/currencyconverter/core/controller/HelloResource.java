@@ -2,6 +2,7 @@ package currencyconverter.core.controller;
 
 
 import currencyconverter.core.entity.сurrency.*;
+import currencyconverter.core.service.ConversionService;
 import currencyconverter.core.service.CurrencyService;
 import currencyconverter.core.service.RequestLogUnitService;
 import io.swagger.annotations.Api;
@@ -19,12 +20,14 @@ import java.util.List;
 @SwaggerDefinition(tags = {@Tag(name = "Currency", description = "Currency conversion API")})
 public class HelloResource {
 
-    private final CurrencyService currencyService;
+    private final ConversionService conversionService;
     private final RequestLogUnitService requestLogUnitService;
+    private final CurrencyService currencyService;
 
-    public HelloResource(CurrencyService currencyService, RequestLogUnitService requestLogUnitService) {
-        this.currencyService = currencyService;
+    public HelloResource(ConversionService conversionService, RequestLogUnitService requestLogUnitService, CurrencyService currencyService) {
+        this.conversionService = conversionService;
         this.requestLogUnitService = requestLogUnitService;
+        this.currencyService = currencyService;
     }
 
     @GetMapping("/info")
@@ -40,13 +43,14 @@ public class HelloResource {
     @ApiOperation(value = "Convert currency from one to another")
     @GetMapping("/user/convert")
     public ResultDTO convert(@Validated @RequestBody ConversionRequest request) {
-        return currencyService.calculate(request);
+        return conversionService.calculate(request);
     }
 
     @ApiOperation(value = "Update DB on certain date, return date of pulled data")
-    @GetMapping("/admin/update/{date}")
+//    @GetMapping("/admin/update/{date}")
+    @GetMapping("/update/{date}")
     public String update(@PathVariable("date") String date) {
-        LocalDate ld = currencyService.pullAndSave(date);
+        LocalDate ld = currencyService.pullAndSave(currencyService.parseDate(date));
         return currencyService.parseFromDateToString(ld);
 //      reference "09.02.2019"
     }

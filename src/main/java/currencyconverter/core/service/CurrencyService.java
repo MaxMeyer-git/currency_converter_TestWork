@@ -2,9 +2,6 @@ package currencyconverter.core.service;
 
 import currencyconverter.core.entity.сurrency.*;
 import currencyconverter.core.repository.CurrencyRepository;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,44 +11,29 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CurrencyService {
-    private final CurrencyRepository currencyRepository;
-    private final RequestLogUnitService requestLogUnitService;
-
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
     @Value("${priority.default.request.url.withdate}")
-    private String urlstring;
+    private String URL_String;
+    private static final int INCOMING_AMOUNT_OF_CURRENCY  = 35;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private final CurrencyRepository currencyRepository;
+    private final HolidayService holidayService;
 
-    public CurrencyService(CurrencyRepository currencyRepository, RequestLogUnitService requestLogUnitService) {
+    public CurrencyService(CurrencyRepository currencyRepository, HolidayService holidayService) {
         this.currencyRepository = currencyRepository;
-        this.requestLogUnitService = requestLogUnitService;
+        this.holidayService = holidayService;
     }
 
-    public ResultDTO calculate(ConversionRequest request) {
-        Cur currency = getCurrValue(request);
-
-        Double res = (currency.getValFrom() / currency.getNominalFrom() * request.getAmount())
-                / (currency.getValTo() / currency.getNominalTo());
-
-        res = roundD(res, 2);
-
-        logSave(currency, request, res);
-
-        return new ResultDTO(request.getCurrencyFrom().getName(), request.getCurrencyTo().getName(),
-                res , currency.getDate().format(formatter));
-    }
-
-    private Cur getCurrValue(ConversionRequest request) {
+    public CurrInerTransport getCurrValue(ConversionRequest request) {
         LocalDate date = parseDate(request.getDate());
-        Cur cur = new Cur();
+        CurrInerTransport cur = new CurrInerTransport();
 
         if (request.getCurrencyFrom() == CurrencyENUM.RUR) {
 
@@ -87,92 +69,81 @@ public class CurrencyService {
         return cur;
     }
 
-    private Currency check(LocalDate date, int numcode) {
+    @Transactional
+    @SneakyThrows
+    protected Currency check(LocalDate date, int numcode) {
         Optional<Currency> optionalCurrency = currencyRepository.findByNumcodeAndDate(numcode, date);
         if (optionalCurrency.isPresent()) {
             return optionalCurrency.get();
+        }
 
-        } else {
-            LocalDate dateOfPulledCurses = pullAndSave(date.format(formatter));
+        LocalDate lastWorkingDay = holidayService.isItHoliday(date);
+        if (lastWorkingDay == null) {
+            LocalDate dateOfPulledCurses = pullAndSave(date);
+            holidayService.saveNewHoliday(date, dateOfPulledCurses);
             Optional<Currency> x = currencyRepository.findByNumcodeAndDate(numcode, dateOfPulledCurses);
             return x.orElseThrow(NoSuchElementException::new);
+        } else {
+            Optional<Currency> optionalCurrencyLWD = currencyRepository.findByNumcodeAndDate(numcode, lastWorkingDay);
+            return optionalCurrencyLWD.orElseThrow(NoSuchElementException::new);
         }
     }
 
     @Transactional
-    public LocalDate pullAndSave(String date) {
+    public LocalDate pullAndSave(LocalDate date) {
         var x = pullData(date);
-        return saveCurr(x);
+        return saveCurrency(x);
     }
 
     @SneakyThrows
-    private ValCurs pullData(String date)// throws JAXBException, MalformedURLException
-    {
+    private ValCurs pullData(LocalDate date) {
         JAXBContext jaxbContext = JAXBContext.newInstance(ValCurs.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        URL url2 = new URL(urlstring + date);
-
-        return (ValCurs) unmarshaller.unmarshal(url2);
+        URL url = new URL(URL_String + parseFromDateToString(date));
+        return (ValCurs) unmarshaller.unmarshal(url);
     }
 
+    private LocalDate saveCurrency(ValCurs valCurs) {
+        LocalDate dateOfPull = parseDate(valCurs.getDate());
+        int inDB = checkIsDatePresent(dateOfPull);
 
-    // TODO custom exception
-    private LocalDate saveCurr(ValCurs valCurs) {
-        LocalDate localDate = parseDate(valCurs.getDate());
-        if (checkIsDatePresent(localDate)) {
-            return localDate;
+        if (inDB == 0) {
+            currencyRepository.saveAll(convertToCurrency(valCurs, dateOfPull));
         }
+        if (inDB == INCOMING_AMOUNT_OF_CURRENCY) {
+            return dateOfPull;
+        }
+        if (inDB != 0 && inDB < INCOMING_AMOUNT_OF_CURRENCY) {
+            var x = convertToCurrency(valCurs, dateOfPull);
+            var y = currencyRepository.findByDate(dateOfPull)
+                    .orElseThrow(() -> new NoSuchElementException("Something really wrong check: (CurrencyService - saveCurrency)!"));
 
-        var currencyList = valCurs.getValuteDTOlist().stream()
-                .map(valuteDTO -> new Currency(valuteDTO, localDate))
-                .collect(Collectors.toList());
-
-        currencyRepository.saveAll(currencyList);
-        return localDate;
+            var z = x.stream()
+                    .filter(currencyX -> y.stream()
+                            .allMatch(currencyY -> currencyY.equals(currencyX)))
+                    .collect(Collectors.toList());
+            currencyRepository.saveAll(z);
+        }
+        return dateOfPull;
     }
 
-    private LocalDate parseDate(String date) {
-        return LocalDate.parse(date, formatter);
+    private List<Currency> convertToCurrency(ValCurs valCurs, LocalDate dateOfPull) {
+        return valCurs.getValuteDTOlist().stream()
+                .map(valuteDTO -> new Currency(valuteDTO, dateOfPull))
+                .collect(Collectors.toList());
+    }
+
+    private int checkIsDatePresent(LocalDate date) {
+        int count = currencyRepository.countByDate(date);
+        return count;
     }
 
     public String parseFromDateToString(LocalDate date) {
         return date.format(formatter);
     }
 
-    private boolean checkIsDatePresent(LocalDate date) {
-        Long count = currencyRepository.countByDate(date);
-        return count > 0;
+    public LocalDate parseDate(String date) {
+        return LocalDate.parse(date, formatter);
     }
 
-    private static double roundD(double value, int places) {
-        double scale = Math.pow(10, places);
-        return Math.round(value * scale) / scale;
-    }
-
-    @Transactional
-    protected void logSave (Cur currency, ConversionRequest request, Double result){
-
-        var requestLogUnit = new RequestLogUnit(
-                request.getCurrencyFrom().getNumcode(),
-                currency.getValFrom()/currency.getNominalFrom(),
-                request.getCurrencyTo().getNumcode(),
-                currency.getValTo()/currency.getNominalTo(),
-                request.getAmount(),
-                result,
-                currency.getDate());
-        requestLogUnitService.save(requestLogUnit);
-    }
-
-    @Setter
-    @Getter
-    @NoArgsConstructor
-    private static class Cur {
-        Double valFrom;
-        int nominalFrom;
-
-        Double valTo;
-        int nominalTo;
-
-        LocalDate date;
-    }
 }
