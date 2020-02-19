@@ -34,8 +34,7 @@ public class HelloResource {
 
     @GetMapping("/getrefconv")
     public ConversionRequest referenceForConvert() {
-        var y = new ConversionRequest(CurrencyENUM.USD, CurrencyENUM.AMD, 100., "10.02.2019");
-        return y;
+        return new ConversionRequest(CurrencyENUM.USD, CurrencyENUM.AMD, 100., "10.02.2019");
     }
 
     @ApiOperation(value = "Convert currency from one to another")
@@ -54,8 +53,7 @@ public class HelloResource {
 
     @GetMapping("/getreflog")
     public LogUnitRequest referenceForGetRequestLog() {
-        var y = new LogUnitRequest(CurrencyENUM.USD, CurrencyENUM.AMD, "09.02.2019", true);
-        return y;
+        return new LogUnitRequest(CurrencyENUM.USD, CurrencyENUM.AMD, "09.02.2019", true);
     }
 
     @GetMapping("/admin/getlog")
