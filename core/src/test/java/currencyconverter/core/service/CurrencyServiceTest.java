@@ -2,7 +2,6 @@ package currencyconverter.core.service;
 
 import currencyconverter.core.entity.сurrency.ConversionRequest;
 import currencyconverter.core.entity.сurrency.CurrencyENUM;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class CurrencyServiceTest {
                 (CurrencyENUM.USD, CurrencyENUM.RUR, 100. ,
                         "17.02.2020");
 
-        var x = currencyService.calc(conversionRequest);
+        var x = currencyService.calculate(conversionRequest);
         System.out.println(x.toString());
 
     }

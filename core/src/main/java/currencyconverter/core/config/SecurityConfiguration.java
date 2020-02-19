@@ -20,8 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
+
+    public SecurityConfiguration(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -34,16 +37,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("**/secured/**").authenticated()
-                .anyRequest().permitAll()
+                .antMatchers("/update/**").hasRole("ADMIN")
+                .antMatchers("/convert/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/").permitAll()
+                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
+                .permitAll()
                 .and()
-                .formLogin().permitAll();
+                .formLogin();
     }
 
     @Bean
     protected PasswordEncoder getPasswordEncoder() {
+        // Dummy encoder for demo purposes
         return NoOpPasswordEncoder.getInstance();
     }
 }

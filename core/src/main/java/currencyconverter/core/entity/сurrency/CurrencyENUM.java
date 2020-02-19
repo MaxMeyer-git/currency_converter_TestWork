@@ -3,6 +3,8 @@ package currencyconverter.core.entity.сurrency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public enum CurrencyENUM {
@@ -41,11 +43,25 @@ public enum CurrencyENUM {
     ZAR("R01810", 710, 10, "Южноафриканских рэндов"),
     KRW("R01815", 410, 1000, "Вон Республики Корея"),
     JPY("R01820", 392, 100, "Японских иен"),
-    RUR("R12345", 123, 1, "Rубль");
+    RUR("R12345", 810, 1, "Российский рубль");
 
     private final String id;
     private final int numcode;
     private final int nominal;
     private final String name;
 
+    public String getAllAvailable() {
+        Object[] possibleValues = RUR.getDeclaringClass().getEnumConstants();
+        StringBuilder sb = new StringBuilder();
+        for (Object e: possibleValues) {
+            sb.append(e.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Short name: " + name() +
+                " | Full name: '" + name + '\'';
+    }
 }

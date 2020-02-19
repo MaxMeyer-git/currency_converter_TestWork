@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "app_users")
+@Table(name = "APP_USERS")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,7 +30,7 @@ public class AppUsers {
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "app_user_role_of_app_user",
+    @JoinTable(name = "APP_USER_USER_ROLE",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;

@@ -1,44 +1,62 @@
 package currencyconverter.core.controller;
 
 
-import currencyconverter.core.repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import currencyconverter.core.entity.сurrency.ConversionRequest;
+import currencyconverter.core.entity.сurrency.CurrencyENUM;
+import currencyconverter.core.entity.сurrency.ResultDTO;
+import currencyconverter.core.service.CurrencyService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/")
+import java.time.LocalDate;
+
 @RestController
+@Api(tags = {"Currency"}, consumes = "application/json; utf-8", produces = "application/json; utf-8")
+@SwaggerDefinition(tags = {@Tag(name = "Currency", description = "Currency conversion API")})
 public class HelloResource {
 
-    @Autowired
-    UsersRepository usersRepository;
+    private final CurrencyService currencyService;
 
-    @GetMapping("all")
-    public String hello() {
-        StringBuilder sb = new StringBuilder();
-        usersRepository.findAll().forEach(appUsers -> sb.append(appUsers.getName()).append(" "));
-        sb.append("END");
-        return sb.toString();
+
+    public HelloResource(CurrencyService currencyService) {
+        this.currencyService = currencyService;
     }
 
-    @GetMapping("curr")
-    public String getCurrency (){
-
-
-        return "Foo";
+    @GetMapping("/info")
+    public String info() {
+        return CurrencyENUM.RUR.getAllAvailable();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("secured/all")
-    public String securedHello() {
-        return "Secured Hello";
+    @ApiOperation(value = "Convert currency from one to another")
+    @GetMapping("/convert")
+    public ResultDTO convert(@Validated @RequestBody ConversionRequest request) {
+        return currencyService.calculate(request);
     }
 
-    @GetMapping("secured/alternate")
-    public String alternate() {
-        return "alternate";
+    @ApiOperation(value = "Update DB on certain date, return date of pulled data")
+    @GetMapping("/update/{date}")
+    public String update(@PathVariable("date") String date) {
+        LocalDate ld = currencyService.pullAndSave(date);
+        return currencyService.parseFromDateToString(ld);
+    }
+
+    @GetMapping("/test")
+    public String noSecureTest() {
+        return "test";
+    }
+
+    @GetMapping("/convert/x")
+    public String secureTestConvert() {
+        return "secure convert test";
+    }
+
+    @GetMapping("/update/x")
+    public String secureTestUpdate() {
+        return "secure update test";
     }
 }

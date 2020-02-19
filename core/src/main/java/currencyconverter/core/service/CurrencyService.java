@@ -20,58 +20,44 @@ import java.util.stream.Collectors;
 
 @Service
 public class CurrencyService {
+    private final CurrencyRepository currencyRepository;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Value("${priority.default.request.url.withdate}")
     private String urlstring;
 
-    private final CurrencyRepository currencyRepository;
-
     public CurrencyService(CurrencyRepository currencyRepository) {
         this.currencyRepository = currencyRepository;
     }
 
-    public ResultDTO calc (ConversionRequest request) {
+    public ResultDTO calculate(ConversionRequest request) {
         Cur currency = getCurrValue(request);
 
         Double res = (currency.getValFrom() / currency.getNominalFrom() * request.getAmount())
                 / (currency.getValTo() / currency.getNominalTo());
 
-        return new ResultDTO(roundD(res, 2), currency.getDate().format(formatter));
+        return new ResultDTO(request.getCurrencyFrom().getName(), request.getCurrencyTo().getName(),
+                roundD(res, 2), currency.getDate().format(formatter));
     }
 
-    @Setter
-    @Getter
-    @NoArgsConstructor
-    private static class Cur {
-        Double valFrom;
-        int nominalFrom;
-
-        Double valTo;
-        int nominalTo;
-
-        LocalDate date;
-    }
-
-    private Cur getCurrValue(ConversionRequest request){
-
+    private Cur getCurrValue(ConversionRequest request) {
         LocalDate date = parseDate(request.getDate());
         Cur cur = new Cur();
 
-        if (request.getCurrencyFrom() == CurrencyENUM.RUR){
+        if (request.getCurrencyFrom() == CurrencyENUM.RUR) {
 
             cur.setValFrom(1.);
             cur.setNominalFrom(1);
 
-            var currency = check (date, request.getCurrencyTo().getNumcode());
+            var currency = check(date, request.getCurrencyTo().getNumcode());
             cur.setValTo(currency.getValue());
             cur.setNominalTo(request.getCurrencyTo().getNominal());
             cur.setDate(currency.getDate());
         }
 
-        if (request.getCurrencyTo() == CurrencyENUM.RUR){
-            var currency = check (date, request.getCurrencyFrom().getNumcode());
+        if (request.getCurrencyTo() == CurrencyENUM.RUR) {
+            var currency = check(date, request.getCurrencyFrom().getNumcode());
             cur.setValFrom(currency.getValue());
             cur.setNominalFrom(request.getCurrencyTo().getNominal());
             cur.setDate(currency.getDate());
@@ -80,20 +66,20 @@ public class CurrencyService {
             cur.setNominalTo(1);
         }
 
-        if (request.getCurrencyFrom() != CurrencyENUM.RUR && request.getCurrencyTo() != CurrencyENUM.RUR){
-            var currency = check (date, request.getCurrencyFrom().getNumcode());
+        if (request.getCurrencyFrom() != CurrencyENUM.RUR && request.getCurrencyTo() != CurrencyENUM.RUR) {
+            var currency = check(date, request.getCurrencyFrom().getNumcode());
             cur.setValFrom(currency.getValue());
             cur.setNominalFrom(request.getCurrencyFrom().getNominal());
             cur.setDate(currency.getDate());
 
-            var currency2 = check (currency.getDate(), request.getCurrencyTo().getNumcode());
+            var currency2 = check(currency.getDate(), request.getCurrencyTo().getNumcode());
             cur.setValTo(currency2.getValue());
             cur.setNominalTo(request.getCurrencyTo().getNominal());
         }
         return cur;
     }
 
-    private Currency check (LocalDate  date , int numcode){
+    private Currency check(LocalDate date, int numcode) {
         Optional<Currency> optionalCurrency = currencyRepository.findByNumcodeAndDate(numcode, date);
         if (optionalCurrency.isPresent()) {
             return optionalCurrency.get();
@@ -140,6 +126,10 @@ public class CurrencyService {
         return LocalDate.parse(date, formatter);
     }
 
+    public String parseFromDateToString(LocalDate date) {
+        return date.format(formatter);
+    }
+
     private boolean checkIsDatePresent(LocalDate date) {
         Long count = currencyRepository.countByDate(date);
         return count > 0;
@@ -150,5 +140,16 @@ public class CurrencyService {
         return Math.round(value * scale) / scale;
     }
 
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    private static class Cur {
+        Double valFrom;
+        int nominalFrom;
 
+        Double valTo;
+        int nominalTo;
+
+        LocalDate date;
+    }
 }
