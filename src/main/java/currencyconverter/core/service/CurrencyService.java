@@ -8,11 +8,13 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -21,14 +23,16 @@ import java.util.stream.Collectors;
 @Service
 public class CurrencyService {
     private final CurrencyRepository currencyRepository;
+    private final RequestLogUnitService requestLogUnitService;
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Value("${priority.default.request.url.withdate}")
     private String urlstring;
 
-    public CurrencyService(CurrencyRepository currencyRepository) {
+    public CurrencyService(CurrencyRepository currencyRepository, RequestLogUnitService requestLogUnitService) {
         this.currencyRepository = currencyRepository;
+        this.requestLogUnitService = requestLogUnitService;
     }
 
     public ResultDTO calculate(ConversionRequest request) {
@@ -37,8 +41,12 @@ public class CurrencyService {
         Double res = (currency.getValFrom() / currency.getNominalFrom() * request.getAmount())
                 / (currency.getValTo() / currency.getNominalTo());
 
+        res = roundD(res, 2);
+
+        logSave(currency, request, res);
+
         return new ResultDTO(request.getCurrencyFrom().getName(), request.getCurrencyTo().getName(),
-                roundD(res, 2), currency.getDate().format(formatter));
+                res , currency.getDate().format(formatter));
     }
 
     private Cur getCurrValue(ConversionRequest request) {
@@ -91,6 +99,7 @@ public class CurrencyService {
         }
     }
 
+    @Transactional
     public LocalDate pullAndSave(String date) {
         var x = pullData(date);
         return saveCurr(x);
@@ -138,6 +147,20 @@ public class CurrencyService {
     private static double roundD(double value, int places) {
         double scale = Math.pow(10, places);
         return Math.round(value * scale) / scale;
+    }
+
+    @Transactional
+    protected void logSave (Cur currency, ConversionRequest request, Double result){
+
+        var requestLogUnit = new RequestLogUnit(
+                request.getCurrencyFrom().getNumcode(),
+                currency.getValFrom()/currency.getNominalFrom(),
+                request.getCurrencyTo().getNumcode(),
+                currency.getValTo()/currency.getNominalTo(),
+                request.getAmount(),
+                result,
+                currency.getDate());
+        requestLogUnitService.save(requestLogUnit);
     }
 
     @Setter
