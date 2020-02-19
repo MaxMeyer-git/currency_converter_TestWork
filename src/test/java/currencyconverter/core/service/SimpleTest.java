@@ -9,6 +9,9 @@ public class SimpleTest {
     @Test
     public void test() {
 
-        System.out.println(CurrencyENUM.RUR.getAllAvailable());
+//        System.out.println(CurrencyENUM.RUR.getAllAvailable());
+    Boolean x = true;
+        System.out.println(x);
     }
+
 }

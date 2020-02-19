@@ -13,7 +13,7 @@ public interface RequestLogUnitRepository extends JpaRepository<RequestLogUnit, 
 
     Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeTo(Integer numCodeFrom, Integer numCodeTo );
 
-    Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeToAndDateOfCruse(int numCodeFrom, int numCodeTo, LocalDate dateOfCruse);
+    Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeToAndDateOfCourse(int numCodeFrom, int numCodeTo, LocalDate dateOfCruse);
 
     Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeToAndDateOfRequest(int numCodeFrom, int numCodeTo, LocalDate dateOfCruse);
 }

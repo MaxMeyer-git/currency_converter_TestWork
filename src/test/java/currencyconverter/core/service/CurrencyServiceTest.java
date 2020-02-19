@@ -2,7 +2,9 @@ package currencyconverter.core.service;
 
 import currencyconverter.core.entity.сurrency.ConversionRequest;
 import currencyconverter.core.entity.сurrency.CurrencyENUM;
+import currencyconverter.core.entity.сurrency.LogUnitRequest;
 import currencyconverter.core.entity.сurrency.RequestLogUnit;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ public class CurrencyServiceTest {
     private String dateStr = "10.02.2019";
     private LocalDate localDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     private LocalDate localDateForLog = LocalDate.parse("09.02.2019", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    private String stringDateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
 
     @Test
@@ -36,26 +39,43 @@ public class CurrencyServiceTest {
         ConversionRequest conversionRequest = new ConversionRequest
                 (currFrom, currTo, amount, dateStr);
 
+        ConversionRequest conversionRequest1 = new ConversionRequest
+                (CurrencyENUM.USD, CurrencyENUM.AMD, 100., "10.02.2019");
+
         var x = currencyService.calculate(conversionRequest);
         System.out.println(x.toString());
     }
 
+//    @Ignore
     @Test
     public void bFindLog() {
         var x = requestLogUnitService.findByCurrencyCouple(currFrom, currTo);
-        var y = requestLogUnitService.findByCurrencyCoupleAndDateOfCruse(currFrom, currTo, localDateForLog);
+        var y = requestLogUnitService.findByCurrencyCoupleAndDateOfCourse(currFrom, currTo, localDateForLog);
         var z = requestLogUnitService.findByCurrencyCoupleAndDateOfRequest(currFrom, currTo, LocalDate.now());
         testSout(x, "findByCurrencyCouple");
-        testSout(y, "findByCurrencyCoupleAndDateOfCruse");
+        testSout(y, "findByCurrencyCoupleAndDateOfCourse");
         testSout(z, "findByCurrencyCoupleAndDateOfRequest");
     }
 
-    private void testSout (List<RequestLogUnit> logUnitList, String name){
+    @Test
+    public void cWebReq() {
+        var x = new LogUnitRequest(currFrom, currTo, null, null);
+        var y = new LogUnitRequest(currFrom, currTo, "09.02.2019", true);
+        var z = new LogUnitRequest(currFrom, currTo, stringDateNow, false);
+
+        testSout(requestLogUnitService.getLog(x), "Null / Null");
+        testSout(requestLogUnitService.getLog(y), "09.02.2019 / true");
+        testSout(requestLogUnitService.getLog(z), "stringDateNow / false");
+
+    }
+
+    private void testSout(List<RequestLogUnit> logUnitList, String name) {
         System.out.println();
         System.out.println("--------------------- " + name + " ---------------------");
         System.out.println();
-        for (RequestLogUnit lu: logUnitList) {
+        for (RequestLogUnit lu : logUnitList) {
             System.out.println(lu.toString());
         }
+        System.out.println("-----------------------------------------------");
     }
 }

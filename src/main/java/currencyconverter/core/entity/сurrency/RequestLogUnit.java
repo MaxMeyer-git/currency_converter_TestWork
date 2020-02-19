@@ -44,8 +44,8 @@ public class RequestLogUnit {
     @Column(name = "result")
     private Double result;
 
-    @Column(name = "dateofcruse")
-    private LocalDate dateOfCruse;
+    @Column(name = "dateofcourse")
+    private LocalDate dateOfCourse;
 
     public RequestLogUnit( int numCodeFrom,
                            Double curseFrom,
@@ -62,7 +62,7 @@ public class RequestLogUnit {
         this.curseTo = curseTo;
         this.amount = amount;
         this.result = result;
-        this.dateOfCruse = dateOfCruse;
+        this.dateOfCourse = dateOfCruse;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class RequestLogUnit {
                 ", curseTo=" + curseTo +
                 ", amount=" + amount +
                 ", result=" + result +
-                ", dateOfCruse=" + dateOfCruse +
+                ", dateOfCruse=" + dateOfCourse +
                 '}';
     }
 }
