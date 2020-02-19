@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface RequestLogUnitRepository extends JpaRepository<RequestLogUnit, UUID> {
 
-    Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeTo(int numCodeFrom, int numCodeTo );
+    Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeTo(Integer numCodeFrom, Integer numCodeTo );
 
-    Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeToaAndDateOfCruse(int numCodeFrom, int numCodeTo, LocalDate dateOfCruse);
+    Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeToAndDateOfCruse(int numCodeFrom, int numCodeTo, LocalDate dateOfCruse);
 
     Optional<List<RequestLogUnit>> findByNumCodeFromAndNumCodeToAndDateOfRequest(int numCodeFrom, int numCodeTo, LocalDate dateOfCruse);
 }

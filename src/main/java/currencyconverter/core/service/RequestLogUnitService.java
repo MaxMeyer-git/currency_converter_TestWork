@@ -24,18 +24,27 @@ public class RequestLogUnitService {
 
     }
 
-    public List<RequestLogUnit> findByCurrencyCouple (CurrencyENUM curFrom, CurrencyENUM curTo){
-        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeTo(curFrom.getNumcode(), curTo.getNumcode());
+    public List<RequestLogUnit> findByCurrencyCouple
+            (CurrencyENUM curFrom, CurrencyENUM curTo){
+
+        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeTo
+                (curFrom.getNumcode(), curTo.getNumcode());
         return optional.orElseThrow(NoSuchElementException::new);
     }
 
-    public List<RequestLogUnit> findByCurrencyCoupleAndDateOfCruse (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date){
-        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeToaAndDateOfCruse(curFrom.getNumcode(), curTo.getNumcode(),date);
+    public List<RequestLogUnit> findByCurrencyCoupleAndDateOfCruse
+            (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date){
+
+        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfCruse
+                (curFrom.getNumcode(), curTo.getNumcode(),date);
         return optional.orElseThrow(NoSuchElementException::new);
     }
 
-    public List<RequestLogUnit> findByCurrencyCoupleAndDateOfRequest (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date){
-        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfRequest(curFrom.getNumcode(), curTo.getNumcode(),date);
+    public List<RequestLogUnit> findByCurrencyCoupleAndDateOfRequest
+            (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date){
+
+        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfRequest
+                (curFrom.getNumcode(), curTo.getNumcode(),date);
         return optional.orElseThrow(NoSuchElementException::new);
     }
 

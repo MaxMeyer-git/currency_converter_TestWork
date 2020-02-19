@@ -5,11 +5,11 @@ import currencyconverter.core.entity.сurrency.ConversionRequest;
 import currencyconverter.core.entity.сurrency.CurrencyENUM;
 import currencyconverter.core.entity.сurrency.ResultDTO;
 import currencyconverter.core.service.CurrencyService;
+import currencyconverter.core.service.RequestLogUnitService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +21,11 @@ import java.time.LocalDate;
 public class HelloResource {
 
     private final CurrencyService currencyService;
+    private final RequestLogUnitService requestLogUnitService;
 
-
-    public HelloResource(CurrencyService currencyService) {
+    public HelloResource(CurrencyService currencyService, RequestLogUnitService requestLogUnitService) {
         this.currencyService = currencyService;
+        this.requestLogUnitService = requestLogUnitService;
     }
 
     @GetMapping("/info")

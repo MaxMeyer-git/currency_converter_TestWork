@@ -24,35 +24,38 @@ public class CurrencyServiceTest {
     private RequestLogUnitService requestLogUnitService;
 
     private CurrencyENUM currFrom = CurrencyENUM.USD;
-    private CurrencyENUM currTo = CurrencyENUM.RUR;
+    private CurrencyENUM currTo = CurrencyENUM.AMD;
     private Double amount = 100.;
-    private String dateStr = "17.02.2019";
+    private String dateStr = "10.02.2019";
     private LocalDate localDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    private LocalDate localDateForLog = LocalDate.parse("09.02.2019", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
 
     @Test
-    public void calc() {
+    public void aCalculate() {
         ConversionRequest conversionRequest = new ConversionRequest
                 (currFrom, currTo, amount, dateStr);
 
         var x = currencyService.calculate(conversionRequest);
         System.out.println(x.toString());
-
     }
 
     @Test
-    public void findLog() {
+    public void bFindLog() {
         var x = requestLogUnitService.findByCurrencyCouple(currFrom, currTo);
-        testSout(x);
-
+        var y = requestLogUnitService.findByCurrencyCoupleAndDateOfCruse(currFrom, currTo, localDateForLog);
+        var z = requestLogUnitService.findByCurrencyCoupleAndDateOfRequest(currFrom, currTo, LocalDate.now());
+        testSout(x, "findByCurrencyCouple");
+        testSout(y, "findByCurrencyCoupleAndDateOfCruse");
+        testSout(z, "findByCurrencyCoupleAndDateOfRequest");
     }
 
-    private void testSout (List<RequestLogUnit> logUnitList){
+    private void testSout (List<RequestLogUnit> logUnitList, String name){
+        System.out.println();
+        System.out.println("--------------------- " + name + " ---------------------");
+        System.out.println();
         for (RequestLogUnit lu: logUnitList) {
             System.out.println(lu.toString());
         }
-
     }
-
-
 }

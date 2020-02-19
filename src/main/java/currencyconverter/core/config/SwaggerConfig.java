@@ -22,7 +22,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 //                .useDefaultResponseMessages(false)
                 .select()
 //                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                .paths(PathSelectors.ant("/**"))
+//                .paths(PathSelectors.ant("/**"))
                 .apis(RequestHandlerSelectors.basePackage("currencyconverter.core"))
                 .build()
                 .apiInfo(getApiDetails());
