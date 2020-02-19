@@ -15,12 +15,11 @@ public class CurrencyServiceTest {
     @Autowired
     private CurrencyService currencyService;
 
-//    @Ignore
     @Test
     public void calc() {
         ConversionRequest conversionRequest = new ConversionRequest
                 (CurrencyENUM.USD, CurrencyENUM.RUR, 100. ,
-                        "17.02.2020");
+                        "17.02.2019");
 
         var x = currencyService.calculate(conversionRequest);
         System.out.println(x.toString());

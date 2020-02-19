@@ -1,7 +1,6 @@
 package currencyconverter.core.repository;
 
 import currencyconverter.core.entity.сurrency.ValCurs;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,6 @@ public class ParseXML {
     @Value("${priority.default.request.url.nodate}")
     String urlstring;
 
-    @Ignore
     @Test
     public void fromXMLtoObj() throws JAXBException, MalformedURLException {
         JAXBContext jaxbContext = JAXBContext.newInstance(ValCurs.class);
@@ -36,6 +34,7 @@ public class ParseXML {
 
 //        valCurs.getValuteDTOlist().forEach(valuteDTO -> System.out.println(valuteDTO.toString()));
 
+//      this how i did CurrencyENUM
         valCurs.getValuteDTOlist().forEach(valuteDTO -> System.out.println(
                 valuteDTO.getCharcode() + "(\"" +
                         valuteDTO.getId() + "\", " +

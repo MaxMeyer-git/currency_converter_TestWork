@@ -19,11 +19,10 @@ public class CurrencyRepositoryTest {
     @Autowired
     private CurrencyRepository currencyRepository;
 
-    @Ignore
     @Test
     public void test (){
 
-        String dateIn = "17.02.2020";
+        String dateIn = "15.02.2020";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate date = LocalDate.parse(dateIn, formatter);
 

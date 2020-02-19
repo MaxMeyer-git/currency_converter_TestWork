@@ -30,7 +30,8 @@ public class ValuteDTO {
     private String name;
 
     @XmlElement(name = "Value")
-    @XmlJavaTypeAdapter(CurseAdaptor.class) // just for fun
+    // just for fun
+    @XmlJavaTypeAdapter(CurseAdaptor.class)
     private Double value;
 
 
