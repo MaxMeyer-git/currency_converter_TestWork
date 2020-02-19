@@ -29,12 +29,5 @@ public class CurrencyRepositoryTest {
         var x = currencyRepository.findByNumcodeAndDate(840, date);
         System.out.println(x.orElseThrow().getValue());
 
-//        {
-//            "amount": 10,
-//                "currencyFrom": "USD",
-//                "currencyTo": "RUR",
-//                "date": "17.02.2020"
-//        }
     }
-
 }
