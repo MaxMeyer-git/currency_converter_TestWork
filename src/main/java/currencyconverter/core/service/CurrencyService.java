@@ -2,7 +2,7 @@ package currencyconverter.core.service;
 
 import currencyconverter.core.entity.сurrency.*;
 import currencyconverter.core.repository.CurrencyRepository;
-import currencyconverter.core.util.SomeDataConversionUtility;
+import currencyconverter.core.util.DataConversionUtility;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,12 @@ import java.util.stream.Collectors;
 public class CurrencyService {
     @Value("${priority.default.request.url.withdate}")
     private String URL_String;
-    private static final int INCOMING_AMOUNT_OF_CURRENCY  = 35;
+    //  TODO cache
     private final CurrencyRepository currencyRepository;
     private final HolidayService holidayService;
-    private final SomeDataConversionUtility dcu;
+    private final DataConversionUtility dcu;
 
-
-    public CurrencyService(CurrencyRepository currencyRepository, HolidayService holidayService, SomeDataConversionUtility dcu) {
+    public CurrencyService(CurrencyRepository currencyRepository, HolidayService holidayService, DataConversionUtility dcu) {
         this.currencyRepository = currencyRepository;
         this.holidayService = holidayService;
         this.dcu = dcu;
@@ -81,13 +80,17 @@ public class CurrencyService {
 
         LocalDate lastWorkingDay = holidayService.isItHoliday(date);
         if (lastWorkingDay == null) {
-            LocalDate dateOfPulledCurses = pullAndSave(date);
-            holidayService.saveNewHoliday(date, dateOfPulledCurses);
-            Optional<Currency> x = currencyRepository.findByNumcodeAndDate(numcode, dateOfPulledCurses);
-            return x.orElseThrow(NoSuchElementException::new);
+            LocalDate dateOfPulled = pullAndSave(date);
+            holidayService.saveNewHoliday(date, dateOfPulled);
+            return currencyRepository.findByNumcodeAndDate(numcode, dateOfPulled).orElseThrow(NoSuchElementException::new);
         } else {
-            Optional<Currency> optionalCurrencyLWD = currencyRepository.findByNumcodeAndDate(numcode, lastWorkingDay);
-            return optionalCurrencyLWD.orElseThrow(NoSuchElementException::new);
+            var x = currencyRepository.findByNumcodeAndDate(numcode, lastWorkingDay);
+            if (x.isPresent()){
+                return x.get();
+            }else {
+                LocalDate dateOfPulled = pullAndSave(date);
+                return currencyRepository.findByNumcodeAndDate(numcode, dateOfPulled).orElseThrow(NoSuchElementException::new);
+            }
         }
     }
 
@@ -106,27 +109,26 @@ public class CurrencyService {
     }
 
     private LocalDate saveCurrency(ValCurs valCurs) {
-        LocalDate dateOfPull = dcu.StringToDate(valCurs.getDate());
-        int inDB = checkIsDatePresent(dateOfPull);
+        LocalDate dateOfPullResponse = dcu.StringToDate(valCurs.getDate());
+        int inDB = checkIsDatePresent(dateOfPullResponse);
+        int amountOfCurr = valCurs.getValuteDTOlist().size();
 
         if (inDB == 0) {
-            currencyRepository.saveAll(convertToCurrency(valCurs, dateOfPull));
+            currencyRepository.saveAll(convertToCurrency(valCurs, dateOfPullResponse));
         }
-        if (inDB == INCOMING_AMOUNT_OF_CURRENCY) {
-            return dateOfPull;
+        if (inDB == amountOfCurr) {
+            return dateOfPullResponse;
         }
-        if (inDB != 0 && inDB < INCOMING_AMOUNT_OF_CURRENCY) {
-            var x = convertToCurrency(valCurs, dateOfPull);
-            var y = currencyRepository.findByDate(dateOfPull)
+        if (inDB > 0 && inDB < amountOfCurr) {
+            var x = convertToCurrency(valCurs, dateOfPullResponse);
+            var y = currencyRepository.findByDate(dateOfPullResponse)
                     .orElseThrow(() -> new NoSuchElementException("Something really wrong check: (CurrencyService - saveCurrency)!"));
-            System.out.println("FUCK YOU MAN");
             var z = x.stream()
-                    .filter(currencyX -> y.stream()
-                            .allMatch(currencyY -> currencyY.equals(currencyX)))
+                    .filter(currencyX -> !y.contains(currencyX))
                     .collect(Collectors.toList());
             currencyRepository.saveAll(z);
         }
-        return dateOfPull;
+        return dateOfPullResponse;
     }
 
     private List<Currency> convertToCurrency(ValCurs valCurs, LocalDate dateOfPull) {

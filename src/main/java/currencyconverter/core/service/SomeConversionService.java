@@ -4,7 +4,7 @@ import currencyconverter.core.entity.сurrency.ConversionRequest;
 import currencyconverter.core.entity.сurrency.CurrInerTransport;
 import currencyconverter.core.entity.сurrency.RequestLogUnit;
 import currencyconverter.core.entity.сurrency.ResultDTO;
-import currencyconverter.core.util.SomeDataConversionUtility;
+import currencyconverter.core.util.DataConversionUtility;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +13,10 @@ public class SomeConversionService {
 
     private final RequestLogUnitService requestLogUnitService;
     private final CurrencyService currencyService;
-    private final SomeDataConversionUtility dcu;
+    private final DataConversionUtility dcu;
 
 
-    public SomeConversionService(RequestLogUnitService requestLogUnitService, CurrencyService currencyService, SomeDataConversionUtility dcu) {
+    public SomeConversionService(RequestLogUnitService requestLogUnitService, CurrencyService currencyService, DataConversionUtility dcu) {
         this.requestLogUnitService = requestLogUnitService;
         this.currencyService = currencyService;
         this.dcu = dcu;

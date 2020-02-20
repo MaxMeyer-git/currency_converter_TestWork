@@ -1,17 +1,16 @@
 package currencyconverter.core.util;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
-public class SomeDataConversionUtility {
+public class DataConversionUtility {
 
-//    @Getter
-    private  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    @Getter
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public String DateToString(LocalDate date) {
         return date.format(formatter);
