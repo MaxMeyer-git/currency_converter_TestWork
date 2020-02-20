@@ -3,6 +3,7 @@ package currencyconverter.core.entity.сurrency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -47,22 +48,17 @@ public enum CurrencyENUM {
     RUR("R12345", 810, 1, "Российский рубль");
 
     private final String id;
-    private final int numcode;
+    private final int numCode;
     private final int nominal;
     private final String name;
 
-    public String getAllAvailable() {
-        Object[] possibleValues = RUR.getDeclaringClass().getEnumConstants();
-        StringBuilder sb = new StringBuilder();
-        for (Object e: possibleValues) {
-            sb.append(e.toString()).append("\n");
-        }
-        return sb.toString();
+    public static List<CurrencyENUM> getAllAvailable() {
+        return List.of(RUR.getDeclaringClass().getEnumConstants());
     }
 
     public static CurrencyENUM findByNumCode(int numcode){
         for(CurrencyENUM e : values()){
-            if( e.numcode == numcode){
+            if( e.numCode == numcode){
                 return e;
             }
         }

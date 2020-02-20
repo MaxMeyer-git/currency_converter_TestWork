@@ -1,5 +1,6 @@
 package currencyconverter.core.config;
 
+import io.swagger.annotations.Api;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,10 +20,10 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-//                .useDefaultResponseMessages(false)
+                .useDefaultResponseMessages(false)
                 .select()
-//                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-//                .paths(PathSelectors.ant("/**"))
+                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+                .paths(PathSelectors.ant("/**"))
                 .apis(RequestHandlerSelectors.basePackage("currencyconverter.core"))
                 .build()
                 .apiInfo(getApiDetails());

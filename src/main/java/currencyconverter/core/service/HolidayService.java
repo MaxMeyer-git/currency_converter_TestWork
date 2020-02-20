@@ -30,5 +30,4 @@ public class HolidayService {
             holidayRepository.save(new HolidayRecord(reqDate, lwd));
         }
     }
-
 }

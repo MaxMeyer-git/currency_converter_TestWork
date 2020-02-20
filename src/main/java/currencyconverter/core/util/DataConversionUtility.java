@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class DataConversionUtility {
 
+    private final static int DECIMAL_PLACES = 2;
+
     @Getter
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
@@ -18,5 +20,10 @@ public class DataConversionUtility {
 
     public LocalDate StringToDate(String date) {
         return LocalDate.parse(date, formatter);
+    }
+
+    public double roundDouble(double value) {
+        double scale = Math.pow(10, DECIMAL_PLACES);
+        return Math.round(value * scale) / scale;
     }
 }

@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SomeConversionServiceTest {
+public class mainConversionServiceTest {
 
     @Autowired
-    private SomeConversionService someConversionService;
+    private MainConversionService mainConversionService;
     @Autowired
     private CurrencyService currencyService;
     @Autowired
@@ -49,7 +49,7 @@ public class SomeConversionServiceTest {
         ConversionRequest conversionRequest = new ConversionRequest
                 (currFrom, currTo, amount, dateStr1);
 
-        var x = someConversionService.calculate(conversionRequest);
+        var x = mainConversionService.calculate(conversionRequest);
         System.out.println(x.toString());
     }
 

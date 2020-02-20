@@ -24,8 +24,6 @@ public class LogUnitRequest {
     @ApiModelProperty(value = "unnecessary can be null/empty, if true date = date of course, if false Date Of Request")
     Boolean checkBox;
 
-
-
     public LogUnitRequest(
             @JsonProperty("currencyFrom") @NotBlank @NotNull CurrencyENUM currencyFrom,
             @JsonProperty("currencyTo") @NotBlank @NotNull CurrencyENUM currencyTo,

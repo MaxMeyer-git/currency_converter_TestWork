@@ -34,5 +34,4 @@ public class ValuteDTO {
     @XmlJavaTypeAdapter(CurseAdaptor.class)
     private Double value;
 
-
 }

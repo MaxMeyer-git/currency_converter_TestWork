@@ -30,6 +30,4 @@ public class ResultDTO {
     @ApiModelProperty(value = "Conversion curse date", required = true)
     @JsonProperty("date")
     private String date;
-
-
 }

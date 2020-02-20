@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <artifactId>currency_converter</artifactId>
-        <groupId>test.work</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+    <groupId>test.work</groupId>
+    <version>0.0.1-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
@@ -70,16 +70,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <version>2.1.1</version>
+            <version>2.0.8</version>
         </dependency>
 
         <dependency>
@@ -131,8 +124,6 @@
             <version>2.10.2</version>
         </dependency>
 
-
     </dependencies>
-
 
 </project>

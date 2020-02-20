@@ -20,9 +20,21 @@ public class Role {
 
     @Id
     @Column(name = "role_id")
+
     private UUID roleId;
 
     @Column(name = "role")
     private String role;
 
+    public static UUID getADMIN() {
+        return ADMIN;
+    }
+
+    public static UUID getUSER() {
+        return USER;
+    }
+
+    public static UUID getGUEST() {
+        return GUEST;
+    }
 }

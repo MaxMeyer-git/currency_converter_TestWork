@@ -1,12 +1,10 @@
 package currencyconverter.core.service;
 
-import currencyconverter.core.entity.сurrency.CurrencyENUM;
-import currencyconverter.core.entity.сurrency.LogUnitRequest;
-import currencyconverter.core.entity.сurrency.RequestLogDTO;
-import currencyconverter.core.entity.сurrency.RequestLogUnit;
+import currencyconverter.core.entity.сurrency.*;
 import currencyconverter.core.repository.RequestLogUnitRepository;
 import currencyconverter.core.util.DataConversionUtility;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,14 +17,22 @@ public class RequestLogUnitService {
     private final RequestLogUnitRepository requestLogUnitRepository;
     private final DataConversionUtility dcu;
 
-
     public RequestLogUnitService(RequestLogUnitRepository requestLogUnitRepository, DataConversionUtility dcu) {
         this.requestLogUnitRepository = requestLogUnitRepository;
         this.dcu = dcu;
     }
 
-    public void save(RequestLogUnit rlu) {
-        requestLogUnitRepository.save(rlu);
+    @Transactional
+    protected void logSave(CurrencyInnerDTO currency, ConversionRequest request, Double result) {
+        var requestLogUnit = new RequestLogUnit(
+                request.getCurrencyFrom().getNumCode(),
+                currency.getValFrom() / currency.getNominalFrom(),
+                request.getCurrencyTo().getNumCode(),
+                currency.getValTo() / currency.getNominalTo(),
+                request.getAmount(),
+                result,
+                currency.getDate());
+        requestLogUnitRepository.save(requestLogUnit);
     }
 
     public List<RequestLogDTO> getLogsDTO(LogUnitRequest request) {
@@ -40,6 +46,7 @@ public class RequestLogUnitService {
         )).collect(Collectors.toList());
     }
 
+//    public for tests. Might be useful for future statistic services.
     public List<RequestLogUnit> getLog(LogUnitRequest request) {
         if (request.getDate() == null) {
             return findByCurrencyCouple(request.getCurrencyFrom(), request.getCurrencyTo());
@@ -60,7 +67,7 @@ public class RequestLogUnitService {
             (CurrencyENUM curFrom, CurrencyENUM curTo) {
 
         var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeTo
-                (curFrom.getNumcode(), curTo.getNumcode());
+                (curFrom.getNumCode(), curTo.getNumCode());
         return optional.orElseThrow(NoSuchElementException::new);
     }
 
@@ -68,7 +75,7 @@ public class RequestLogUnitService {
             (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date) {
 
         var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfCourse
-                (curFrom.getNumcode(), curTo.getNumcode(), date);
+                (curFrom.getNumCode(), curTo.getNumCode(), date);
         return optional.orElseThrow(NoSuchElementException::new);
     }
 
@@ -76,7 +83,7 @@ public class RequestLogUnitService {
             (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date) {
 
         var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfRequest
-                (curFrom.getNumcode(), curTo.getNumcode(), date);
+                (curFrom.getNumCode(), curTo.getNumCode(), date);
         return optional.orElseThrow(NoSuchElementException::new);
     }
 

@@ -24,6 +24,4 @@ public class ValCurs {
     @XmlElement (name = "Valute")
     List<ValuteDTO> valuteDTOlist;
 
-
-
 }

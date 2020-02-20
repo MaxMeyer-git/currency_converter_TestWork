@@ -41,8 +41,5 @@ public class AppUsers {
         this.password = appUsers.getPassword();
         this.email = appUsers.getEmail();
         this.roles = appUsers.getRoles();
-
-
     }
-
 }

@@ -1,5 +1,6 @@
 package currencyconverter.core.service;
 
+import currencyconverter.core.entity.user.Role;
 import currencyconverter.core.entity.сurrency.CurrencyENUM;
 import org.junit.Test;
 
@@ -35,6 +36,8 @@ public class SimpleTest {
 
         lol(List.of("lol", 1, CurrencyENUM.RUR));
 
+        Role q = new Role();
+        System.out.println(Role.getADMIN());
 
     }
 

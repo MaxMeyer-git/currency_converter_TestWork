@@ -5,16 +5,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+
 @Setter
 @Getter
 @NoArgsConstructor
-public class CurrInerTransport {
+public class CurrencyInnerDTO {
 
-        Double valFrom;
-        int nominalFrom;
+    private Double valFrom;
+    private int nominalFrom;
 
-        Double valTo;
-        int nominalTo;
+    private Double valTo;
+    private int nominalTo;
 
-        LocalDate date;
+    private LocalDate date;
 }
