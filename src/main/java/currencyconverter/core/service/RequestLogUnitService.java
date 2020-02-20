@@ -2,26 +2,42 @@ package currencyconverter.core.service;
 
 import currencyconverter.core.entity.сurrency.CurrencyENUM;
 import currencyconverter.core.entity.сurrency.LogUnitRequest;
+import currencyconverter.core.entity.сurrency.RequestLogDTO;
 import currencyconverter.core.entity.сurrency.RequestLogUnit;
 import currencyconverter.core.repository.RequestLogUnitRepository;
+import currencyconverter.core.util.DataConversionUtility;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class RequestLogUnitService {
 
     private final RequestLogUnitRepository requestLogUnitRepository;
+    private final DataConversionUtility dcu;
 
-    public RequestLogUnitService(RequestLogUnitRepository requestLogUnitRepository) {
+
+    public RequestLogUnitService(RequestLogUnitRepository requestLogUnitRepository, DataConversionUtility dcu) {
         this.requestLogUnitRepository = requestLogUnitRepository;
+        this.dcu = dcu;
     }
 
     public void save(RequestLogUnit rlu) {
         requestLogUnitRepository.save(rlu);
+    }
+
+    public List<RequestLogDTO> getLogsDTO(LogUnitRequest request) {
+        List<RequestLogUnit> res = getLog(request);
+        return res.stream().map(requestLogUnit -> new RequestLogDTO(
+                findCurrencyEnum(requestLogUnit.getNumCodeFrom()),
+                findCurrencyEnum(requestLogUnit.getNumCodeTo()),
+                requestLogUnit.getAmount(),
+                requestLogUnit.getResult(),
+                dcu.DateToString(requestLogUnit.getDateOfCourse())
+        )).collect(Collectors.toList());
     }
 
     public List<RequestLogUnit> getLog(LogUnitRequest request) {
@@ -31,13 +47,13 @@ public class RequestLogUnitService {
         if (request.getCheckBox() != null) {
             if (request.getCheckBox()) {
                 return findByCurrencyCoupleAndDateOfCourse
-                        (request.getCurrencyFrom(), request.getCurrencyTo(), parseDate(request.getDate()));
+                        (request.getCurrencyFrom(), request.getCurrencyTo(), dcu.StringToDate(request.getDate()));
             } else {
                 return findByCurrencyCoupleAndDateOfRequest
-                        (request.getCurrencyFrom(), request.getCurrencyTo(), parseDate(request.getDate()));
+                        (request.getCurrencyFrom(), request.getCurrencyTo(), dcu.StringToDate(request.getDate()));
             }
         }
-        return null;
+        throw new NoSuchElementException("No such Request log");
     }
 
     public List<RequestLogUnit> findByCurrencyCouple
@@ -64,7 +80,7 @@ public class RequestLogUnitService {
         return optional.orElseThrow(NoSuchElementException::new);
     }
 
-    private LocalDate parseDate(String date) {
-        return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    private String findCurrencyEnum(int numCode) {
+        return CurrencyENUM.findByNumCode(numCode).name();
     }
 }

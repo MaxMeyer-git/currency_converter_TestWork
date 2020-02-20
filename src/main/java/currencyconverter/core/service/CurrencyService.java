@@ -2,6 +2,7 @@ package currencyconverter.core.service;
 
 import currencyconverter.core.entity.сurrency.*;
 import currencyconverter.core.repository.CurrencyRepository;
+import currencyconverter.core.util.DataConversionUtility;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -22,17 +22,19 @@ public class CurrencyService {
     @Value("${priority.default.request.url.withdate}")
     private String URL_String;
     private static final int INCOMING_AMOUNT_OF_CURRENCY  = 35;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final CurrencyRepository currencyRepository;
     private final HolidayService holidayService;
+    private final DataConversionUtility dcu;
 
-    public CurrencyService(CurrencyRepository currencyRepository, HolidayService holidayService) {
+
+    public CurrencyService(CurrencyRepository currencyRepository, HolidayService holidayService, DataConversionUtility dcu) {
         this.currencyRepository = currencyRepository;
         this.holidayService = holidayService;
+        this.dcu = dcu;
     }
 
     public CurrInerTransport getCurrValue(ConversionRequest request) {
-        LocalDate date = parseDate(request.getDate());
+        LocalDate date = dcu.StringToDate(request.getDate());
         CurrInerTransport cur = new CurrInerTransport();
 
         if (request.getCurrencyFrom() == CurrencyENUM.RUR) {
@@ -99,12 +101,12 @@ public class CurrencyService {
     private ValCurs pullData(LocalDate date) {
         JAXBContext jaxbContext = JAXBContext.newInstance(ValCurs.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        URL url = new URL(URL_String + parseFromDateToString(date));
+        URL url = new URL(URL_String + dcu.DateToString(date));
         return (ValCurs) unmarshaller.unmarshal(url);
     }
 
     private LocalDate saveCurrency(ValCurs valCurs) {
-        LocalDate dateOfPull = parseDate(valCurs.getDate());
+        LocalDate dateOfPull = dcu.StringToDate(valCurs.getDate());
         int inDB = checkIsDatePresent(dateOfPull);
 
         if (inDB == 0) {
@@ -117,7 +119,7 @@ public class CurrencyService {
             var x = convertToCurrency(valCurs, dateOfPull);
             var y = currencyRepository.findByDate(dateOfPull)
                     .orElseThrow(() -> new NoSuchElementException("Something really wrong check: (CurrencyService - saveCurrency)!"));
-
+            System.out.println("FUCK YOU MAN");
             var z = x.stream()
                     .filter(currencyX -> y.stream()
                             .allMatch(currencyY -> currencyY.equals(currencyX)))
@@ -134,16 +136,6 @@ public class CurrencyService {
     }
 
     private int checkIsDatePresent(LocalDate date) {
-        int count = currencyRepository.countByDate(date);
-        return count;
+        return currencyRepository.countByDate(date);
     }
-
-    public String parseFromDateToString(LocalDate date) {
-        return date.format(formatter);
-    }
-
-    public LocalDate parseDate(String date) {
-        return LocalDate.parse(date, formatter);
-    }
-
 }

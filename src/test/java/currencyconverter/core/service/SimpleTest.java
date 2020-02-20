@@ -10,13 +10,15 @@ public class SimpleTest {
     public void test() {
 
 //        System.out.println(CurrencyENUM.RUR.getAllAvailable());
+//        Object[] possibleValues = CurrencyENUM.RUR.getDeclaringClass().getEnumConstants();
 
-        int i = 0;
-        Object[] possibleValues = CurrencyENUM.RUR.getDeclaringClass().getEnumConstants();
-        for (Object o : possibleValues) {
-            i++;
-        }
-        System.out.println(i);
+//        Object[] possibleValues = CurrencyENUM.RUR.getDeclaringClass().getEnumConstants();
+//        for (Object o : possibleValues) {
+//            System.out.println(o.getClass());
+//        }
+
+        var x = CurrencyENUM.findByNumCode(392);
+        System.out.println(x.name());
     }
 
 }

@@ -3,6 +3,8 @@ package currencyconverter.core.entity.сurrency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.NoSuchElementException;
+
 
 @Getter
 @AllArgsConstructor
@@ -56,6 +58,15 @@ public enum CurrencyENUM {
             sb.append(e.toString()).append("\n");
         }
         return sb.toString();
+    }
+
+    public static CurrencyENUM findByNumCode(int numcode){
+        for(CurrencyENUM e : values()){
+            if( e.numcode == numcode){
+                return e;
+            }
+        }
+        throw new NoSuchElementException("Cant find such CurrencyENUM by NumCode ");
     }
 
     @Override

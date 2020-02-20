@@ -5,10 +5,7 @@ import currencyconverter.core.entity.сurrency.*;
 import currencyconverter.core.service.SomeConversionService;
 import currencyconverter.core.service.CurrencyService;
 import currencyconverter.core.service.RequestLogUnitService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
+import io.swagger.annotations.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +15,12 @@ import java.util.List;
 @RestController
 @Api(tags = {"Currency"}, consumes = "application/json; utf-8", produces = "application/json; utf-8")
 @SwaggerDefinition(tags = {@Tag(name = "Currency", description = "Currency conversion API")})
-public class HelloResource {
+public class HelloResource  {
 
     private final SomeConversionService someConversionService;
     private final RequestLogUnitService requestLogUnitService;
     private final CurrencyService currencyService;
+
 
     public HelloResource(SomeConversionService someConversionService, RequestLogUnitService requestLogUnitService, CurrencyService currencyService) {
         this.someConversionService = someConversionService;
@@ -35,34 +33,30 @@ public class HelloResource {
         return CurrencyENUM.RUR.getAllAvailable();
     }
 
-    @GetMapping("/getrefconv")
+    @GetMapping("/converter_reference")
     public ConversionRequest referenceForConvert() {
         return new ConversionRequest(CurrencyENUM.USD, CurrencyENUM.AMD, 100., "10.02.2019");
     }
 
     @ApiOperation(value = "Convert currency from one to another")
-    @GetMapping("/user/convert")
+//    @GetMapping("/user/converter")
+    @GetMapping("/converter")
     public ResultDTO convert(@Validated @RequestBody ConversionRequest request) {
         return someConversionService.calculate(request);
     }
 
-    @ApiOperation(value = "Update DB on certain date, return date of pulled data")
-//    @GetMapping("/admin/update/{date}")
-    @GetMapping("/update/{date}")
-    public String update(@PathVariable("date") String date) {
-        LocalDate ld = currencyService.pullAndSave(currencyService.parseDate(date));
-        return currencyService.parseFromDateToString(ld);
-//      reference "09.02.2019"
-    }
-
-    @GetMapping("/getreflog")
+    @GetMapping("/log_reference")
     public LogUnitRequest referenceForGetRequestLog() {
         return new LogUnitRequest(CurrencyENUM.USD, CurrencyENUM.AMD, "09.02.2019", true);
     }
 
-    @GetMapping("/admin/getlog")
-    public List<RequestLogUnit> getRequestLog(@Validated @RequestBody LogUnitRequest request) {
-        return requestLogUnitService.getLog(request);
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "ok", response = RequestLogUnit.class)
+    })
+//    @GetMapping("/admin/log")
+    @GetMapping("/log")
+    public List<RequestLogDTO> getRequestLog(@Validated @RequestBody LogUnitRequest request) {
+        return requestLogUnitService.getLogsDTO(request);
     }
 
     @GetMapping("/convert/x")
