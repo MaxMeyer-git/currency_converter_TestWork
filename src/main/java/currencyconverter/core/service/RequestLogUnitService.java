@@ -5,7 +5,7 @@ import currencyconverter.core.entity.сurrency.LogUnitRequest;
 import currencyconverter.core.entity.сurrency.RequestLogDTO;
 import currencyconverter.core.entity.сurrency.RequestLogUnit;
 import currencyconverter.core.repository.RequestLogUnitRepository;
-import currencyconverter.core.util.DataConversionUtility;
+import currencyconverter.core.util.SomeDataConversionUtility;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 public class RequestLogUnitService {
 
     private final RequestLogUnitRepository requestLogUnitRepository;
-    private final DataConversionUtility dcu;
+    private final SomeDataConversionUtility dcu;
 
 
-    public RequestLogUnitService(RequestLogUnitRepository requestLogUnitRepository, DataConversionUtility dcu) {
+    public RequestLogUnitService(RequestLogUnitRepository requestLogUnitRepository, SomeDataConversionUtility dcu) {
         this.requestLogUnitRepository = requestLogUnitRepository;
         this.dcu = dcu;
     }

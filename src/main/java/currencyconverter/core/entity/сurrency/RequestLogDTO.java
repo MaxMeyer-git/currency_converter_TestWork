@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @AllArgsConstructor
-public class RequestLogDTO {
+public class RequestLogDTO  {
 
     private String currFrom;
 
@@ -18,4 +18,14 @@ public class RequestLogDTO {
 
     private String dateOfCourse;
 
+    @Override
+    public String toString() {
+        return "RequestLogDTO{" +
+                "currFrom='" + currFrom + '\'' +
+                ", currTo='" + currTo + '\'' +
+                ", amount=" + amount +
+                ", result=" + result +
+                ", dateOfCourse='" + dateOfCourse + '\'' +
+                '}';
+    }
 }

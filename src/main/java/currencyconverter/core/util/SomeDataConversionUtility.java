@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
-public class DataConversionUtility {
+public class SomeDataConversionUtility {
 
-    @Getter
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+//    @Getter
+    private  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public String DateToString(LocalDate date) {
         return date.format(formatter);

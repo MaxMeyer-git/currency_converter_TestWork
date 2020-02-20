@@ -2,7 +2,7 @@ package currencyconverter.core.service;
 
 import currencyconverter.core.entity.сurrency.*;
 import currencyconverter.core.repository.CurrencyRepository;
-import currencyconverter.core.util.DataConversionUtility;
+import currencyconverter.core.util.SomeDataConversionUtility;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,10 +24,10 @@ public class CurrencyService {
     private static final int INCOMING_AMOUNT_OF_CURRENCY  = 35;
     private final CurrencyRepository currencyRepository;
     private final HolidayService holidayService;
-    private final DataConversionUtility dcu;
+    private final SomeDataConversionUtility dcu;
 
 
-    public CurrencyService(CurrencyRepository currencyRepository, HolidayService holidayService, DataConversionUtility dcu) {
+    public CurrencyService(CurrencyRepository currencyRepository, HolidayService holidayService, SomeDataConversionUtility dcu) {
         this.currencyRepository = currencyRepository;
         this.holidayService = holidayService;
         this.dcu = dcu;
