@@ -2,7 +2,7 @@ package currencyconverter.core.controller;
 
 
 import currencyconverter.core.entity.сurrency.*;
-import currencyconverter.core.service.ConversionService;
+import currencyconverter.core.service.SomeConversionService;
 import currencyconverter.core.service.CurrencyService;
 import currencyconverter.core.service.RequestLogUnitService;
 import io.swagger.annotations.Api;
@@ -20,12 +20,12 @@ import java.util.List;
 @SwaggerDefinition(tags = {@Tag(name = "Currency", description = "Currency conversion API")})
 public class HelloResource {
 
-    private final ConversionService conversionService;
+    private final SomeConversionService someConversionService;
     private final RequestLogUnitService requestLogUnitService;
     private final CurrencyService currencyService;
 
-    public HelloResource(ConversionService conversionService, RequestLogUnitService requestLogUnitService, CurrencyService currencyService) {
-        this.conversionService = conversionService;
+    public HelloResource(SomeConversionService someConversionService, RequestLogUnitService requestLogUnitService, CurrencyService currencyService) {
+        this.someConversionService = someConversionService;
         this.requestLogUnitService = requestLogUnitService;
         this.currencyService = currencyService;
     }
@@ -43,7 +43,7 @@ public class HelloResource {
     @ApiOperation(value = "Convert currency from one to another")
     @GetMapping("/user/convert")
     public ResultDTO convert(@Validated @RequestBody ConversionRequest request) {
-        return conversionService.calculate(request);
+        return someConversionService.calculate(request);
     }
 
     @ApiOperation(value = "Update DB on certain date, return date of pulled data")

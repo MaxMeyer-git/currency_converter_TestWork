@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 @Service
 public class RequestLogUnitService {
+
     private final RequestLogUnitRepository requestLogUnitRepository;
 
     public RequestLogUnitService(RequestLogUnitRepository requestLogUnitRepository) {

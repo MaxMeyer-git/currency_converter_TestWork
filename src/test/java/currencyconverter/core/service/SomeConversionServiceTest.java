@@ -16,10 +16,10 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ConversionServiceTest {
+public class SomeConversionServiceTest {
 
     @Autowired
-    private ConversionService conversionService;
+    private SomeConversionService someConversionService;
 
     @Autowired
     private RequestLogUnitService requestLogUnitService;
@@ -41,7 +41,7 @@ public class ConversionServiceTest {
         ConversionRequest conversionRequest1 = new ConversionRequest
                 (CurrencyENUM.USD, CurrencyENUM.AMD, 100., "10.02.2019");
 
-        var x = conversionService.calculate(conversionRequest);
+        var x = someConversionService.calculate(conversionRequest);
         System.out.println(x.toString());
     }
 

@@ -8,11 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ConversionService {
+public class SomeConversionService {
+
     private final RequestLogUnitService requestLogUnitService;
     private final CurrencyService currencyService;
 
-    public ConversionService(RequestLogUnitService requestLogUnitService, CurrencyService currencyService) {
+    public SomeConversionService(RequestLogUnitService requestLogUnitService, CurrencyService currencyService) {
         this.requestLogUnitService = requestLogUnitService;
         this.currencyService = currencyService;
     }
