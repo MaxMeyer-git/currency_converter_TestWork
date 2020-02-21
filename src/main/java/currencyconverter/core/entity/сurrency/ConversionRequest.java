@@ -3,6 +3,7 @@ package currencyconverter.core.entity.сurrency;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,16 +14,16 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class ConversionRequest {
 
-    @ApiModelProperty(value = "Source currency", required = true)
+    @ApiModelProperty(example = "USD", value = "Source currency", required = true)
     CurrencyENUM currencyFrom;
 
-    @ApiModelProperty(value = "Target currency", required = true)
+    @ApiModelProperty(example = "AMD", value = "Target currency", required = true, position = 1)
     CurrencyENUM currencyTo;
 
-    @ApiModelProperty(value = "Amount", required = true)
+    @ApiModelProperty(example = "100", value = "Amount", required = true, position = 2)
     Double amount;
 
-    @ApiModelProperty(value = "Conversion curse date", required = true)
+    @ApiModelProperty(example = "09.02.2019", value = "Conversion curse date Format: dd.MM.yyyy ", required = true, position = 3)
     String date;
 
     public ConversionRequest(

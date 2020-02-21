@@ -27,17 +27,19 @@ public class SimpleTest {
 //lol(1);
 //lol(CurrencyENUM.RUR);
 
-        List<Object> x = new ArrayList<>();
-        x.add("LOl");
-        x.add(1);
-        x.add(CurrencyENUM.RUR);
+//        List<Object> x = new ArrayList<>();
+//        x.add("LOl");
+//        x.add(1);
+//        x.add(CurrencyENUM.RUR);
+//        lol(x);
+//        lol(List.of("lol", 1, CurrencyENUM.RUR));
 
-        lol(x);
-
-        lol(List.of("lol", 1, CurrencyENUM.RUR));
-
-        Role q = new Role();
-        System.out.println(Role.getADMIN());
+        var y = CurrencyENUM.getAllAvailable();
+        StringBuilder sb = new StringBuilder();
+        for (var z : y) {
+            sb.append(z.name()).append(", ");
+        }
+        System.out.println(sb.toString());
 
     }
 

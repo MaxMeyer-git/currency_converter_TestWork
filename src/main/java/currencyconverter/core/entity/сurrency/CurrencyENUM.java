@@ -56,18 +56,13 @@ public enum CurrencyENUM {
         return List.of(RUR.getDeclaringClass().getEnumConstants());
     }
 
-    public static CurrencyENUM findByNumCode(int numcode){
-        for(CurrencyENUM e : values()){
-            if( e.numCode == numcode){
+    public static CurrencyENUM findByNumCode(int numcode) {
+        for (CurrencyENUM e : values()) {
+            if (e.numCode == numcode) {
                 return e;
             }
         }
         throw new NoSuchElementException("Cant find such CurrencyENUM by NumCode ");
     }
 
-    @Override
-    public String toString() {
-        return "Short name: " + name() +
-                " | Full name: '" + name + '\'';
-    }
 }

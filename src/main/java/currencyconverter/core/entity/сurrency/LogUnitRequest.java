@@ -12,16 +12,18 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class LogUnitRequest {
 
-    @ApiModelProperty(value = "Source currency", required = true)
+    @ApiModelProperty(example = "USD", value = "Source currency", required = true)
     private CurrencyENUM currencyFrom;
 
-    @ApiModelProperty(value = "Target currency", required = true)
+    @ApiModelProperty(example = "AMD", value = "Target currency", required = true, position = 1)
     CurrencyENUM currencyTo;
 
-    @ApiModelProperty(value = "date, unnecessary, if null/empty return all accordingly chosen currencies")
+    @ApiModelProperty(example = "09.02.2019", value = "date, unnecessary, " +
+            "if null/empty return all accordingly chosen currencies", position = 2)
     String date;
 
-    @ApiModelProperty(value = "unnecessary can be null/empty, if true date = date of course, if false Date Of Request")
+    @ApiModelProperty(example = "true", value = "unnecessary can be null/empty, " +
+            "if true date = date of course, if false Date Of Request", position = 3)
     Boolean checkBox;
 
     public LogUnitRequest(

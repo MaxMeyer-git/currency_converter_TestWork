@@ -31,15 +31,11 @@ public class mainConversionServiceTest {
     private Double amount = 100.;
     private String dateStr1 = "16.05.2000";
     private String dateStr2 = "09.02.2019";
-    private LocalDate localDate1;
-    private LocalDate localDate2;
     private LocalDate localDateNow;
     private String stringDateNow;
 
     @Before
     public void aBefore() {
-        localDate1 = dcu.StringToDate(dateStr1);
-        localDate2 = dcu.StringToDate(dateStr2);
         localDateNow = LocalDate.now();
         stringDateNow = dcu.DateToString(localDateNow);
     }

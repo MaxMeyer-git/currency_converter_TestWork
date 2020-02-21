@@ -15,19 +15,19 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class ResultDTO {
 
-    @ApiModelProperty(value = "Source currency", required = true)
+    @ApiModelProperty(value = "Source currency")
     @JsonProperty("currencyFrom")
     private String currencyFrom;
 
-    @ApiModelProperty(value = "Target currency", required = true)
+    @ApiModelProperty(value = "Target currency")
     @JsonProperty("currencyTo")
     private String currencyTo;
 
-    @ApiModelProperty(value = "Result", required = true)
+    @ApiModelProperty(value = "Result")
     @JsonProperty("value")
     private Double value;
 
-    @ApiModelProperty(value = "Conversion curse date", required = true)
+    @ApiModelProperty(value = "Conversion curse date")
     @JsonProperty("date")
     private String date;
 }

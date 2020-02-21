@@ -20,11 +20,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(false)
+//                .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
-                .paths(PathSelectors.ant("/**"))
                 .apis(RequestHandlerSelectors.basePackage("currencyconverter.core"))
+                .paths(PathSelectors.ant("/**"))
+//                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 .build()
                 .apiInfo(getApiDetails());
     }
