@@ -1,6 +1,5 @@
 package currencyconverter.core.repository;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class CurrencyRepositoryTest {
     @Test
     public void test (){
 
-        String dateIn = "15.02.2020";
+        String dateIn = "21.02.2020";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate date = LocalDate.parse(dateIn, formatter);
 

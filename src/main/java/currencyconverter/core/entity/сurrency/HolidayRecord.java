@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "HolidayRecord")
+@Table(name = "holiday_record")
 @Setter
 @Getter
 @AllArgsConstructor
@@ -22,10 +22,10 @@ public class HolidayRecord {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "requestdate")
+    @Column(name = "request_date")
     LocalDate requestDate;
 
-    @Column(name = "lastworkingday")
+    @Column(name = "last_working_day")
     LocalDate  lastWorkingDay;
 
     public HolidayRecord(LocalDate requestDate, LocalDate lastWorkingDay) {

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @ApiModel
 @Getter
-public class ConversionRequest {
+public class CurrencyExchangeRequestDTO {
 
     @ApiModelProperty(example = "USD", value = "Source currency", required = true)
     CurrencyENUM currencyFrom;
@@ -24,7 +24,7 @@ public class ConversionRequest {
     @ApiModelProperty(example = "09.02.2019", value = "Conversion curse date Format: dd.MM.yyyy ", required = true, position = 3)
     String date;
 
-    public ConversionRequest(
+    public CurrencyExchangeRequestDTO(
             @JsonProperty("currencyFrom") @NotBlank @NotNull CurrencyENUM currencyFrom,
             @JsonProperty("currencyTo") @NotBlank @NotNull CurrencyENUM currencyTo,
             @JsonProperty("amount") @NotBlank @NotNull Double amount,

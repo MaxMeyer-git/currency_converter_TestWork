@@ -33,7 +33,7 @@ public class CurrencyService {
     }
 
     @Transactional
-    public CurrencyInnerDTO getCurrencyValues(ConversionRequest request) {
+    public CurrencyInnerDTO getCurrencyValues(CurrencyExchangeRequestDTO request) {
         LocalDate date = dcu.StringToDate(request.getDate());
         CurrencyInnerDTO result = new CurrencyInnerDTO();
 
@@ -106,13 +106,15 @@ public class CurrencyService {
     private LocalDate saveCurrency(ValCurs valCurs) {
         LocalDate dateOfPullResponse = dcu.StringToDate(valCurs.getDate());
         int inDB = currencyRepository.countByDate(dateOfPullResponse);
-        int amountOfCurr = valCurs.getValuteDTOlist().size();
+        int amountOfCurr = valCurs.getValDtoList().size();
 
         if (inDB == 0) {
             currencyRepository.saveAll(convertToCurrency(valCurs, dateOfPullResponse));
+            return dateOfPullResponse;
         }
         if (inDB == amountOfCurr) {
             return dateOfPullResponse;
+
         }
         if (inDB > 0 && inDB < amountOfCurr) {
             var x = convertToCurrency(valCurs, dateOfPullResponse);
@@ -128,7 +130,7 @@ public class CurrencyService {
     }
 
     private List<Currency> convertToCurrency(ValCurs valCurs, LocalDate dateOfPull) {
-        return valCurs.getValuteDTOlist().stream()
+        return valCurs.getValDtoList().stream()
                 .map(valuteDTO -> new Currency(valuteDTO, dateOfPull))
                 .collect(Collectors.toList());
     }

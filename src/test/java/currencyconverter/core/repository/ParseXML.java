@@ -32,10 +32,10 @@ public class ParseXML {
         System.out.println(valCurs.getName());
         System.out.println(valCurs.getDate());
 
-//        valCurs.getValuteDTOlist().forEach(valuteDTO -> System.out.println(valuteDTO.toString()));
+//        valCurs.getValDtoList().forEach(valuteDTO -> System.out.println(valuteDTO.toString()));
         int i = 0;
 //      this how i did CurrencyENUM
-        valCurs.getValuteDTOlist().forEach(valuteDTO -> System.out.println(
+        valCurs.getValDtoList().forEach(valuteDTO -> System.out.println(
                 valuteDTO.getCharcode() + "(\"" +
                         valuteDTO.getId() + "\", " +
                         valuteDTO.getNumcode() + ", " +

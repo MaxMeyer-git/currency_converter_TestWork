@@ -1,10 +1,9 @@
 package currencyconverter.core.service;
 
 
-import currencyconverter.core.entity.user.CustomAppUsersDetails;
-import currencyconverter.core.entity.user.AppUsers;
+import currencyconverter.core.entity.user.AppUser;
+import currencyconverter.core.entity.user.CustomAppUserDetails;
 import currencyconverter.core.repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,11 +22,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<AppUsers> optionalUsers = usersRepository.findByName(username);
+        Optional<AppUser> optionalUsers = usersRepository.findByName(username);
 
         optionalUsers
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
         return optionalUsers
-                .map(CustomAppUsersDetails::new).get();
+                .map(CustomAppUserDetails::new).get();
     }
 }

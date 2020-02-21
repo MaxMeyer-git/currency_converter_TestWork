@@ -11,31 +11,31 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "requestlogunit")
+@Table(name = "exchange_log_unit")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestLogUnit {
+public class ExchangeLogUnit {
 
     @Id
     @GeneratedValue
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "dateofrequest")
+    @Column(name = "date_of_request")
     private LocalDate dateOfRequest;
 
-    @Column(name = "numcodefrom")
+    @Column(name = "num_code_from")
     private int numCodeFrom;
 
-    @Column(name = "cursefrom")
+    @Column(name = "curse_from")
     private Double curseFrom;
 
-    @Column(name = "numcodeto")
+    @Column(name = "num_code_to")
     private int numCodeTo;
 
-    @Column(name = "curseto")
+    @Column(name = "curse_to")
     private Double curseTo;
 
     @Column(name = "amount")
@@ -44,10 +44,10 @@ public class RequestLogUnit {
     @Column(name = "result")
     private Double result;
 
-    @Column(name = "dateofcourse")
+    @Column(name = "date_of_course")
     private LocalDate dateOfCourse;
 
-    public RequestLogUnit( int numCodeFrom,
+    public ExchangeLogUnit(int numCodeFrom,
                            Double curseFrom,
                            int numCodeTo,
                            Double curseTo,

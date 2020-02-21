@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class mainConversionServiceTest {
+public class MainConversionServiceTest {
 
     @Autowired
     private MainConversionService mainConversionService;
@@ -29,7 +29,8 @@ public class mainConversionServiceTest {
     private CurrencyENUM currFrom = CurrencyENUM.USD;
     private CurrencyENUM currTo = CurrencyENUM.AMD;
     private Double amount = 100.;
-    private String dateStr1 = "16.05.2000";
+    private String dateStr1 = "09.02.2019";
+//    private String dateStr1 = "16.05.2000";
     private String dateStr2 = "09.02.2019";
     private LocalDate localDateNow;
     private String stringDateNow;
@@ -42,18 +43,20 @@ public class mainConversionServiceTest {
 
     @Test
     public void aCalculate() {
-        ConversionRequest conversionRequest = new ConversionRequest
+        CurrencyExchangeRequestDTO currencyExchangeRequestDTO = new CurrencyExchangeRequestDTO
                 (currFrom, currTo, amount, dateStr1);
 
-        var x = mainConversionService.calculate(conversionRequest);
+        var x = mainConversionService.calculate(currencyExchangeRequestDTO);
         System.out.println(x.toString());
+
+//        currencyService.pullAndSave(localDateNow);
     }
 
     @Test
     public void bWebReq() {
-        var x = new LogUnitRequest(currFrom, currTo, null, null);
-        var y = new LogUnitRequest(currFrom, currTo, dateStr2, true);
-        var z = new LogUnitRequest(currFrom, currTo, stringDateNow, false);
+        var x = new ExchangeLogUnitRequest(currFrom, currTo, null, null);
+        var y = new ExchangeLogUnitRequest(currFrom, currTo, dateStr2, true);
+        var z = new ExchangeLogUnitRequest(currFrom, currTo, stringDateNow, false);
 
         soutRequestLogUnit(requestLogUnitService.getLog(x), "Null / Null");
         soutRequestLogUnit(requestLogUnitService.getLog(y), dateStr2 + " / true");
@@ -62,21 +65,21 @@ public class mainConversionServiceTest {
 
     @Test
     public void cWebReq() {
-        var x = new LogUnitRequest(currFrom, currTo, null, null);
-        var y = new LogUnitRequest(currFrom, currTo, dateStr2, true);
-        var z = new LogUnitRequest(currFrom, currTo, stringDateNow, false);
+        var x = new ExchangeLogUnitRequest(currFrom, currTo, null, null);
+        var y = new ExchangeLogUnitRequest(currFrom, currTo, dateStr2, true);
+        var z = new ExchangeLogUnitRequest(currFrom, currTo, stringDateNow, false);
 
         soutRequestLogDTO(requestLogUnitService.getLogsDTO(x), "getLogsDTO Null / Null");
         soutRequestLogDTO(requestLogUnitService.getLogsDTO(y), "getLogsDTO " + dateStr2 + " / true");
         soutRequestLogDTO(requestLogUnitService.getLogsDTO(z), "getLogsDTO string Date Now / false");
     }
 
-    private void soutRequestLogUnit(List<RequestLogUnit> logUnitList, String name) {
-        universalTestSout(logUnitList.stream().map(RequestLogUnit::toString).collect(Collectors.toList()), name);
+    private void soutRequestLogUnit(List<ExchangeLogUnit> logUnitList, String name) {
+        universalTestSout(logUnitList.stream().map(ExchangeLogUnit::toString).collect(Collectors.toList()), name);
     }
 
-    private void soutRequestLogDTO(List<RequestLogDTO> requestLogDTOS, String name) {
-        universalTestSout(requestLogDTOS.stream().map(RequestLogDTO::toString).collect(Collectors.toList()), name);
+    private void soutRequestLogDTO(List<ExchangeLogUnitResponseDTO> exchangeLogUnitResponseDTOS, String name) {
+        universalTestSout(exchangeLogUnitResponseDTOS.stream().map(ExchangeLogUnitResponseDTO::toString).collect(Collectors.toList()), name);
     }
 
     private void universalTestSout(List<String> stringList, String name) {

@@ -3,15 +3,15 @@ DROP TABLE IF EXISTS USER_ROLE;
 
 CREATE TABLE USER_ROLE
 (
-    role_id uuid        NOT NULL,
-    role    varchar(15) NOT NULL,
+    role_id INT         NOT NULL,
+    role    varchar(50) NOT NULL,
     constraint PK_USER_ROLE PRIMARY KEY (role_id)
 );
 
 INSERT INTO USER_ROLE (role_id, role)
-VALUES ('62e50bed-aa00-4671-96c9-d6c1011447c9', 'ADMIN'),
-       ('8acfed4b-6ccd-4dbf-9d50-03e6e4bb3cde', 'USER'),
-       ('c6fbfe22-88a8-4041-848d-2a232ff716ec', 'GUEST');
+VALUES (1, 'ADMIN'),
+       (2, 'USER'),
+       (3, 'GUEST');
 
 -- select * from USER_ROLE;
 -- drop table USER_ROLE;
@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS APP_USER_USER_ROLE;
 CREATE TABLE APP_USER_USER_ROLE
 (
     user_id uuid NOT NULL,
-    role_id uuid NOT NULL,
+    role_id INT NOT NULL,
     CONSTRAINT FK_APP_USER_USER_ROLE_USER_ID FOREIGN KEY (user_id) REFERENCES APP_USERS (user_id),
     CONSTRAINT FK_APP_USER_USER_ROLE_ROLE_ID FOREIGN KEY (role_id) REFERENCES USER_ROLE (role_id)
 );
@@ -62,7 +62,7 @@ from id1,
 
 INSERT INTO APP_USER_USER_ROLE (user_id, role_id)
 with id1 as (select user_id from APP_USERS where name = 'Chuck')
-select id1.user_id, 'c6fbfe22-88a8-4041-848d-2a232ff716ec'
+select id1.user_id, 2
 from id1;
 
 -- select * from portal_user_role;

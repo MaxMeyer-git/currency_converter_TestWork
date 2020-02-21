@@ -1,4 +1,4 @@
-package currencyconverter.core.entity.сurrency;
+package currencyconverter.core.util;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 

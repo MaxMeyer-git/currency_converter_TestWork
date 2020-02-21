@@ -1,5 +1,6 @@
 package currencyconverter.core.entity.сurrency;
 
+import currencyconverter.core.util.CurseAdaptor;
 import lombok.*;
 
 import javax.xml.bind.annotation.*;

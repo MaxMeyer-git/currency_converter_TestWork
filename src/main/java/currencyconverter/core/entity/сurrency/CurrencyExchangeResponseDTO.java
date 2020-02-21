@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ResultDTO {
+public class CurrencyExchangeResponseDTO {
 
     @ApiModelProperty(value = "Source currency")
     @JsonProperty("currencyFrom")

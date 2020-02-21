@@ -23,8 +23,8 @@ public class RequestLogUnitService {
     }
 
     @Transactional
-    public void logSave(CurrencyInnerDTO currency, ConversionRequest request, Double result) {
-        var requestLogUnit = new RequestLogUnit(
+    public void logSave(CurrencyInnerDTO currency, CurrencyExchangeRequestDTO request, Double result) {
+        var requestLogUnit = new ExchangeLogUnit(
                 request.getCurrencyFrom().getNumCode(),
                 currency.getValFrom() / currency.getNominalFrom(),
                 request.getCurrencyTo().getNumCode(),
@@ -35,19 +35,19 @@ public class RequestLogUnitService {
         requestLogUnitRepository.save(requestLogUnit);
     }
 
-    public List<RequestLogDTO> getLogsDTO(LogUnitRequest request) {
-        List<RequestLogUnit> res = getLog(request);
-        return res.stream().map(requestLogUnit -> new RequestLogDTO(
-                findCurrencyEnum(requestLogUnit.getNumCodeFrom()),
-                findCurrencyEnum(requestLogUnit.getNumCodeTo()),
-                requestLogUnit.getAmount(),
-                requestLogUnit.getResult(),
-                dcu.DateToString(requestLogUnit.getDateOfCourse())
+    public List<ExchangeLogUnitResponseDTO> getLogsDTO(ExchangeLogUnitRequest request) {
+        List<ExchangeLogUnit> res = getLog(request);
+        return res.stream().map(exchangeLogUnit -> new ExchangeLogUnitResponseDTO(
+                findCurrencyEnum(exchangeLogUnit.getNumCodeFrom()),
+                findCurrencyEnum(exchangeLogUnit.getNumCodeTo()),
+                exchangeLogUnit.getAmount(),
+                exchangeLogUnit.getResult(),
+                dcu.DateToString(exchangeLogUnit.getDateOfCourse())
         )).collect(Collectors.toList());
     }
 
 //    public for tests. Might be useful for future statistic services.
-    public List<RequestLogUnit> getLog(LogUnitRequest request) {
+    public List<ExchangeLogUnit> getLog(ExchangeLogUnitRequest request) {
         if (request.getDate() == null) {
             return findByCurrencyCouple(request.getCurrencyFrom(), request.getCurrencyTo());
         }
@@ -63,19 +63,19 @@ public class RequestLogUnitService {
         throw new NoSuchElementException("No such Request log");
     }
 
-    private List<RequestLogUnit> findByCurrencyCouple
+    private List<ExchangeLogUnit> findByCurrencyCouple
             (CurrencyENUM curFrom, CurrencyENUM curTo) {
         return requestLogUnitRepository.findByNumCodeFromAndNumCodeTo
                 (curFrom.getNumCode(), curTo.getNumCode()).orElseThrow(NoSuchElementException::new);
     }
 
-    private List<RequestLogUnit> findByCurrencyCoupleAndDateOfCourse
+    private List<ExchangeLogUnit> findByCurrencyCoupleAndDateOfCourse
             (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date) {
         return requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfCourse
                 (curFrom.getNumCode(), curTo.getNumCode(), date).orElseThrow(NoSuchElementException::new);
     }
 
-    private List<RequestLogUnit> findByCurrencyCoupleAndDateOfRequest
+    private List<ExchangeLogUnit> findByCurrencyCoupleAndDateOfRequest
             (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date) {
         return requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfRequest
                 (curFrom.getNumCode(), curTo.getNumCode(), date).orElseThrow(NoSuchElementException::new);

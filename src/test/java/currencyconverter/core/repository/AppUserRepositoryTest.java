@@ -1,7 +1,7 @@
 package currencyconverter.core.repository;
 
 import currencyconverter.core.entity.user.Role;
-import currencyconverter.core.entity.user.AppUsers;
+import currencyconverter.core.entity.user.AppUser;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,21 +16,21 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AppUsersRepositoryTest {
+public class AppUserRepositoryTest {
 
         @Autowired
         private  UsersRepository usersRepository;
 
         @Test
         public void URtest (){
-            Optional<AppUsers> res = usersRepository.findByName("Bob");
+            Optional<AppUser> res = usersRepository.findByName("Bob");
 
-            AppUsers appUsers = res.orElseThrow(ArithmeticException::new);
+            AppUser appUser = res.orElseThrow(ArithmeticException::new);
 
-            assertNotNull(appUsers);
-            TestCase.assertEquals("123456", appUsers.getPassword() );
+            assertNotNull(appUser);
+            TestCase.assertEquals("123456", appUser.getPassword() );
 
-            Set<Role> s = appUsers.getRoles();
+            Set<Role> s = appUser.getRoles();
 
             s.forEach(role ->
                     TestCase.assertEquals("ADMIN", role.getRole() )

@@ -11,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class RequestLogDTO {
+public class ExchangeLogUnitResponseDTO {
 
     @ApiModelProperty(value = "Source currency")
     @JsonProperty("currFrom")

@@ -22,6 +22,6 @@ public class ValCurs {
     private String name;
 
     @XmlElement (name = "Valute")
-    List<ValuteDTO> valuteDTOlist;
+    List<ValuteDTO> valDtoList;
 
 }

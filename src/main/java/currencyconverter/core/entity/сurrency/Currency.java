@@ -24,7 +24,7 @@ public class Currency {
     @Column (name = "id")
     private UUID id;
 
-    @Column (name = "numcode")
+    @Column (name = "num_code")
     private Integer numcode;
 
     @Column (name = "value")

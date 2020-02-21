@@ -1,8 +1,8 @@
 package currencyconverter.core.service;
 
-import currencyconverter.core.entity.сurrency.ConversionRequest;
+import currencyconverter.core.entity.сurrency.CurrencyExchangeRequestDTO;
 import currencyconverter.core.entity.сurrency.CurrencyInnerDTO;
-import currencyconverter.core.entity.сurrency.ResultDTO;
+import currencyconverter.core.entity.сurrency.CurrencyExchangeResponseDTO;
 import currencyconverter.core.util.DataConversionUtility;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class MainConversionService {
         this.dcu = dcu;
     }
 
-    public ResultDTO calculate(ConversionRequest request) {
+    public CurrencyExchangeResponseDTO calculate(CurrencyExchangeRequestDTO request) {
         CurrencyInnerDTO currency = currencyService.getCurrencyValues(request);
 
         double result = (currency.getValFrom() / currency.getNominalFrom() * request.getAmount())
@@ -28,7 +28,7 @@ public class MainConversionService {
         result = dcu.roundDouble(result);
         requestLogUnitService.logSave(currency, request, result);
 
-        return new ResultDTO(request.getCurrencyFrom().getName(),
+        return new CurrencyExchangeResponseDTO(request.getCurrencyFrom().getName(),
                 request.getCurrencyTo().getName(),
                 result,
                 dcu.DateToString(currency.getDate()));

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @ApiModel
 @Getter
-public class LogUnitRequest {
+public class ExchangeLogUnitRequest {
 
     @ApiModelProperty(example = "USD", value = "Source currency", required = true)
     private CurrencyENUM currencyFrom;
@@ -26,7 +26,7 @@ public class LogUnitRequest {
             "if true date = date of course, if false Date Of Request", position = 3)
     Boolean checkBox;
 
-    public LogUnitRequest(
+    public ExchangeLogUnitRequest(
             @JsonProperty("currencyFrom") @NotBlank @NotNull CurrencyENUM currencyFrom,
             @JsonProperty("currencyTo") @NotBlank @NotNull CurrencyENUM currencyTo,
             @JsonProperty("date") String date,

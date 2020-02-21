@@ -8,33 +8,21 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "USER_ROLE")
+@Table(name = "user_role")
 @Setter
 @Getter
 @NoArgsConstructor
 public class Role {
 
-    private static final UUID ADMIN = UUID.fromString("62e50bed-aa00-4671-96c9-d6c1011447c9");
-    private static final UUID USER = UUID.fromString("8acfed4b-6ccd-4dbf-9d50-03e6e4bb3cde");
-    private static final UUID GUEST = UUID.fromString("c6fbfe22-88a8-4041-848d-2a232ff716ec");
+    private static final int ADMIN = 1;
+    private static final int USER = 2;
+    private static final int GUEST = 3;
 
     @Id
     @Column(name = "role_id")
-
-    private UUID roleId;
+    private int roleId;
 
     @Column(name = "role")
     private String role;
 
-    public static UUID getADMIN() {
-        return ADMIN;
-    }
-
-    public static UUID getUSER() {
-        return USER;
-    }
-
-    public static UUID getGUEST() {
-        return GUEST;
-    }
 }

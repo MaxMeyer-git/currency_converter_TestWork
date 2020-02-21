@@ -7,10 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class CustomAppUsersDetails extends AppUsers implements UserDetails {
+public class CustomAppUserDetails extends AppUser implements UserDetails {
 
-    public CustomAppUsersDetails(final AppUsers appUsers) {
-        super(appUsers);
+    public CustomAppUserDetails(final AppUser appUser) {
+        super(appUser);
     }
 
     @Override
