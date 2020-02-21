@@ -32,6 +32,7 @@ public class CurrencyService {
         this.dcu = dcu;
     }
 
+    @Transactional
     public CurrencyInnerDTO getCurrencyValues(ConversionRequest request) {
         LocalDate date = dcu.StringToDate(request.getDate());
         CurrencyInnerDTO result = new CurrencyInnerDTO();
@@ -39,29 +40,24 @@ public class CurrencyService {
         if (request.getCurrencyFrom() == CurrencyENUM.RUR) {
             result.setValFrom(1.);
             result.setNominalFrom(1);
-
             var currency = findCurrency(date, request.getCurrencyTo().getNumCode());
             result.setValTo(currency.getValue());
             result.setNominalTo(request.getCurrencyTo().getNominal());
             result.setDate(currency.getDate());
         }
-
         if (request.getCurrencyTo() == CurrencyENUM.RUR) {
             var currency = findCurrency(date, request.getCurrencyFrom().getNumCode());
             result.setValFrom(currency.getValue());
             result.setNominalFrom(request.getCurrencyTo().getNominal());
             result.setDate(currency.getDate());
-
             result.setValTo(1.);
             result.setNominalTo(1);
         }
-
         if (request.getCurrencyFrom() != CurrencyENUM.RUR && request.getCurrencyTo() != CurrencyENUM.RUR) {
             var currency = findCurrency(date, request.getCurrencyFrom().getNumCode());
             result.setValFrom(currency.getValue());
             result.setNominalFrom(request.getCurrencyFrom().getNominal());
             result.setDate(currency.getDate());
-
             var currency2 = findCurrency(currency.getDate(), request.getCurrencyTo().getNumCode());
             result.setValTo(currency2.getValue());
             result.setNominalTo(request.getCurrencyTo().getNominal());
@@ -69,9 +65,9 @@ public class CurrencyService {
         return result;
     }
 
-    @Transactional
+
     @SneakyThrows
-    protected Currency findCurrency(LocalDate date, int numcode) {
+    private Currency findCurrency(LocalDate date, int numcode) {
         Optional<Currency> optionalCurrency = currencyRepository.findByNumcodeAndDate(numcode, date);
         if (optionalCurrency.isPresent()) {
             return optionalCurrency.get();
@@ -84,9 +80,9 @@ public class CurrencyService {
             return currencyRepository.findByNumcodeAndDate(numcode, dateOfPulled).orElseThrow(NoSuchElementException::new);
         } else {
             var x = currencyRepository.findByNumcodeAndDate(numcode, lastWorkingDay);
-            if (x.isPresent()){
+            if (x.isPresent()) {
                 return x.get();
-            }else {
+            } else {
                 LocalDate dateOfPulled = pullAndSave(date);
                 return currencyRepository.findByNumcodeAndDate(numcode, dateOfPulled).orElseThrow(NoSuchElementException::new);
             }
@@ -121,7 +117,7 @@ public class CurrencyService {
         if (inDB > 0 && inDB < amountOfCurr) {
             var x = convertToCurrency(valCurs, dateOfPullResponse);
             var y = currencyRepository.findByDate(dateOfPullResponse)
-                    .orElseThrow(() -> new NoSuchElementException("Something really wrong findCurrency: (CurrencyService - saveCurrency)!"));
+                    .orElseThrow(NoSuchElementException::new);
             var z = x.stream()
                     .filter(currencyX -> !y.contains(currencyX))
                     .collect(Collectors.toList());

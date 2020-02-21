@@ -23,7 +23,7 @@ public class RequestLogUnitService {
     }
 
     @Transactional
-    protected void logSave(CurrencyInnerDTO currency, ConversionRequest request, Double result) {
+    public void logSave(CurrencyInnerDTO currency, ConversionRequest request, Double result) {
         var requestLogUnit = new RequestLogUnit(
                 request.getCurrencyFrom().getNumCode(),
                 currency.getValFrom() / currency.getNominalFrom(),
@@ -63,28 +63,22 @@ public class RequestLogUnitService {
         throw new NoSuchElementException("No such Request log");
     }
 
-    public List<RequestLogUnit> findByCurrencyCouple
+    private List<RequestLogUnit> findByCurrencyCouple
             (CurrencyENUM curFrom, CurrencyENUM curTo) {
-
-        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeTo
-                (curFrom.getNumCode(), curTo.getNumCode());
-        return optional.orElseThrow(NoSuchElementException::new);
+        return requestLogUnitRepository.findByNumCodeFromAndNumCodeTo
+                (curFrom.getNumCode(), curTo.getNumCode()).orElseThrow(NoSuchElementException::new);
     }
 
-    public List<RequestLogUnit> findByCurrencyCoupleAndDateOfCourse
+    private List<RequestLogUnit> findByCurrencyCoupleAndDateOfCourse
             (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date) {
-
-        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfCourse
-                (curFrom.getNumCode(), curTo.getNumCode(), date);
-        return optional.orElseThrow(NoSuchElementException::new);
+        return requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfCourse
+                (curFrom.getNumCode(), curTo.getNumCode(), date).orElseThrow(NoSuchElementException::new);
     }
 
-    public List<RequestLogUnit> findByCurrencyCoupleAndDateOfRequest
+    private List<RequestLogUnit> findByCurrencyCoupleAndDateOfRequest
             (CurrencyENUM curFrom, CurrencyENUM curTo, LocalDate date) {
-
-        var optional = requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfRequest
-                (curFrom.getNumCode(), curTo.getNumCode(), date);
-        return optional.orElseThrow(NoSuchElementException::new);
+        return requestLogUnitRepository.findByNumCodeFromAndNumCodeToAndDateOfRequest
+                (curFrom.getNumCode(), curTo.getNumCode(), date).orElseThrow(NoSuchElementException::new);
     }
 
     private String findCurrencyEnum(int numCode) {

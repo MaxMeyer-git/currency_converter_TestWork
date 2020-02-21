@@ -13,7 +13,8 @@
  *Lombok*
   ---------------
 **Запуск:**
- *PostgresSQL* 
+
+   *PostgresSQL* 
    * Подключиться к работающему Postgres. Настройки - application.properties
     * Запустить миграцию DB UserMigration.sql
  

@@ -13,5 +13,4 @@ public interface UsersRepository extends JpaRepository<AppUsers, UUID> {
 
     Optional<AppUsers> findByName(String name);
 
-    List<AppUsers> findAll ();
 }
