@@ -30,7 +30,6 @@ public class MainConversionServiceTest {
     private CurrencyENUM currTo = CurrencyENUM.AMD;
     private Double amount = 100.;
     private String dateStr1 = "09.02.2019";
-//    private String dateStr1 = "16.05.2000";
     private String dateStr2 = "09.02.2019";
     private LocalDate localDateNow;
     private String stringDateNow;
@@ -48,8 +47,6 @@ public class MainConversionServiceTest {
 
         var x = mainConversionService.calculate(currencyExchangeRequestDTO);
         System.out.println(x.toString());
-
-//        currencyService.pullAndSave(localDateNow);
     }
 
     @Test

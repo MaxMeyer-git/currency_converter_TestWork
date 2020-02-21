@@ -34,12 +34,6 @@ public class SimpleTest {
 //        lol(x);
 //        lol(List.of("lol", 1, CurrencyENUM.RUR));
 
-        var y = CurrencyENUM.getAllAvailable();
-        StringBuilder sb = new StringBuilder();
-        for (var z : y) {
-            sb.append(z.name()).append(", ");
-        }
-        System.out.println(sb.toString());
 
     }
 

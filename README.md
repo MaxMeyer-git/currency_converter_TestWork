@@ -26,8 +26,8 @@
     * Перейти по ссылке localhost:8080/swagger-ui.html#/
     * Вы будите Not Authenticated.
     * Миграция создает несколько пользователей:
-        * Login: Alice Pass: 1q2w3e4r  Authorization: USER
-        * Login: Bob   Pass: 123456    Authorization: ADMIN
+        * Login: Alice Pass: 1q2w3e4r  Authority: USER
+        * Login: Bob   Pass: 123456    Authority: ADMIN
         
     * Базовый функционал /info или (localhost:8080/info) доступен всем.
     * Остальной функционал базируется на Granted Authority пользователя
